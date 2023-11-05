@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: on_button_push, child: Text('get all movies'))
+                onPressed: on_button_push, child: const Text('get all movies'))
           ],
         ),
       ),
