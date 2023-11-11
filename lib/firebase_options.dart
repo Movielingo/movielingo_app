@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDyIMMISiujG0PGhUzFQRxTzoc16ToDO4I',
+    appId: '1:348129543233:web:2443bbf7197571eb3df2c0',
+    messagingSenderId: '348129543233',
+    projectId: 'movielingo-717e0',
+    authDomain: 'movielingo-717e0.firebaseapp.com',
+    storageBucket: 'movielingo-717e0.appspot.com',
+    measurementId: 'G-VPRWT9F3H6',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDGaN0pwAk60uf2bTr4fZ8FXI8G5cMHwU8',
     appId: '1:348129543233:android:24ce6d7a72a5a73f3df2c0',
@@ -64,5 +68,14 @@ class DefaultFirebaseOptions {
     projectId: 'movielingo-717e0',
     storageBucket: 'movielingo-717e0.appspot.com',
     iosBundleId: 'com.example.movielingoApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBBdy3ZpypzTzry_QKg04UOuZoDQEGOWns',
+    appId: '1:348129543233:ios:dcf5c6fe75bc3a943df2c0',
+    messagingSenderId: '348129543233',
+    projectId: 'movielingo-717e0',
+    storageBucket: 'movielingo-717e0.appspot.com',
+    iosBundleId: 'com.example.movielingoApp.RunnerTests',
   );
 }
