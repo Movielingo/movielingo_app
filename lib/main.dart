@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/service.dart';
 
 import 'firebase_options.dart';
@@ -22,10 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Movielingooo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Movielingooo'),
+      home: const Wrapper(),
     );
   }
 }
