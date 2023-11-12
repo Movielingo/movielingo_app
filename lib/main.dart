@@ -2,6 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/service.dart';
+import 'package:movielingo_app/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'package:movielingo_app/models/myuser.dart';
 
 import 'firebase_options.dart';
 
@@ -20,13 +23,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Movielingooo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
-        useMaterial3: true,
+    return StreamProvider<MyUser?>.value(
+      initialData: null,
+      value: AuthService().user,
+      child: MaterialApp(
+        title: 'MovieLingo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+          useMaterial3: true,
+        ),
+        home: const Wrapper(),
       ),
-      home: const Wrapper(),
     );
   }
 }
