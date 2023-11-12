@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movielingo_app/screens/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});
@@ -10,6 +11,6 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
-    return const Text('authenticate');
+    return const SignIn();
   }
 }
