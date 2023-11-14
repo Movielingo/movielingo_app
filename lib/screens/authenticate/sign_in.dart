@@ -11,6 +11,10 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
 
+  // text field state
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +32,14 @@ class _SignInState extends State<SignIn> {
               TextFormField(
                   style: const TextStyle(color: Colors.white),
                   onChanged: (val) {
-                    // setState(() => email = val);
+                    setState(() => email = val);
                   }),
               const SizedBox(height: 20.0),
               TextFormField(
                 style: const TextStyle(color: Colors.white),
                 obscureText: true,
                 onChanged: (val) {
-                  // setState(() => password = val);
+                  setState(() => password = val);
                 },
               ),
               const SizedBox(height: 20.0),
@@ -47,8 +51,8 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   onPressed: () async {
-                    // print(email);
-                    // print(password);
+                    print(email);
+                    print(password);
                   },
                   child: const Text(
                     'Sign in',
