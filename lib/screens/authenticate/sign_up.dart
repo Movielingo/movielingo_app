@@ -43,16 +43,28 @@ class _SignUpState extends State<SignUp> {
             child: Column(children: <Widget>[
               const SizedBox(height: 20.0),
               TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Email',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
               const SizedBox(height: 20.0),
               TextFormField(
+                decoration: const InputDecoration(
+                  hintText: 'Password',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
                 validator: (val) =>
                     val!.length < 6 ? 'Enter a password 6+ chars long' : null,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 obscureText: true,
                 onChanged: (val) {
                   setState(() => password = val);
