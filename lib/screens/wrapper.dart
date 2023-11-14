@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/screens/authenticate/authenticate.dart';
+import 'package:movielingo_app/screens/home/home.dart';
 import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
@@ -11,7 +12,11 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<MyUser?>(context);
     print(user);
 
-    // return either home or authenticate widget
-    return const Authenticate();
+    // return either Home or Authenticate widget
+    if (user == null) {
+      return const Authenticate();
+    } else {
+      return Home();
+    }
   }
 }
