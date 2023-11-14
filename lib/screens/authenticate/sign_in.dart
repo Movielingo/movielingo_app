@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  final Function toggleView;
+
+  const SignIn({Key? key, required this.toggleView}) : super(key: key);
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -20,10 +22,18 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.greenAccent[400],
-        elevation: 0.0,
-        title: const Text('Sign In to MovieLingo'),
-      ),
+          backgroundColor: Colors.greenAccent[400],
+          elevation: 0.0,
+          title: const Text('Sign In to MovieLingo'),
+          actions: <Widget>[
+            TextButton.icon(
+              icon: const Icon(Icons.person),
+              label: const Text('Sign Up'),
+              onPressed: () {
+                widget.toggleView();
+              },
+            ),
+          ]),
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(

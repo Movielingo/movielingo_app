@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class SignUp extends StatefulWidget {
+  final Function toggleView;
+
+  const SignUp({Key? key, required this.toggleView}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _RegisterState extends State<Register> {
+class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
   // text field state
   String email = '';
@@ -18,10 +20,18 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.greenAccent[400],
-        elevation: 0.0,
-        title: const Text('Sign Up to MovieLingo'),
-      ),
+          backgroundColor: Colors.greenAccent[400],
+          elevation: 0.0,
+          title: const Text('Sign Up to MovieLingo'),
+          actions: <Widget>[
+            TextButton.icon(
+              icon: const Icon(Icons.person),
+              label: const Text('Sign In'),
+              onPressed: () {
+                widget.toggleView();
+              },
+            ),
+          ]),
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
