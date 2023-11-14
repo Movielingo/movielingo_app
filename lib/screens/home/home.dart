@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
 
 class Home extends StatelessWidget {
-  Home({Key? key}) : super(key: key);
+  Home({super.key});
 
   final AuthService _auth = AuthService();
 
