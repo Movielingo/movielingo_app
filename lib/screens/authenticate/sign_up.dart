@@ -12,9 +12,13 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
   // text field state
   String email = '';
   String password = '';
+  String error = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,15 +39,19 @@ class _SignUpState extends State<SignUp> {
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
+            key: _formKey,
             child: Column(children: <Widget>[
               const SizedBox(height: 20.0),
               TextFormField(
+                  validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   style: const TextStyle(color: Colors.white),
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
               const SizedBox(height: 20.0),
               TextFormField(
+                validator: (val) =>
+                    val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                 style: const TextStyle(color: Colors.white),
                 obscureText: true,
                 onChanged: (val) {
@@ -59,13 +67,23 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   onPressed: () async {
-                    print(email);
-                    print(password);
+                    if (_formKey.currentState!.validate()) {
+                      dynamic result = await _auth.registerWithEmailAndPassword(
+                          email, password);
+                      if (result == null) {
+                        setState(() => error = 'Please supply a valid email');
+                      }
+                    }
                   },
                   child: const Text(
                     'Sign Up',
                     style: TextStyle(color: Colors.white),
                   )),
+              const SizedBox(height: 12.0),
+              Text(
+                error,
+                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              )
             ]),
           )),
     );
