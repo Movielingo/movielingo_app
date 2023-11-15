@@ -9,7 +9,8 @@ class AuthService {
     return user != null ? MyUser(uid: user.uid) : null;
   }
 
-  // auth change user stream that returns back a user whenever there is a change in authentication
+  // auth change user stream that returns back a user whenever there is a
+  // change in authentication
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_userfromFirebase);
   }
@@ -53,7 +54,6 @@ class AuthService {
   }
 
   // sign out
-
   Future signOut() async {
     try {
       return await _auth.signOut();
