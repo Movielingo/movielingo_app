@@ -7,7 +7,7 @@ class UserService {
 
   Future<void> addUser(String userId, String name, String email) async {
     return await _usersCollection.doc(userId).set({
-      'name': name,
+      'username': name,
       'email': email,
     });
   }

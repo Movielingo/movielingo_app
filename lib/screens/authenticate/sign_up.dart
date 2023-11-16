@@ -17,6 +17,7 @@ class _SignUpState extends State<SignUp> {
   // text field state
   String email = '';
   String password = '';
+  String name = '';
   String error = '';
 
   @override
@@ -41,6 +42,19 @@ class _SignUpState extends State<SignUp> {
           child: Form(
             key: _formKey,
             child: Column(children: <Widget>[
+              const SizedBox(height: 20.0),
+              TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Username',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (val) => val!.isEmpty ? 'Enter a Username' : null,
+                  style: const TextStyle(color: Colors.black),
+                  onChanged: (val) {
+                    setState(() => name = val);
+                  }),
               const SizedBox(height: 20.0),
               TextFormField(
                   decoration: const InputDecoration(
@@ -81,7 +95,7 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       dynamic result = await _auth.registerWithEmailAndPassword(
-                          email, password);
+                          name, email, password);
                       if (result == null) {
                         setState(() => error = 'Please supply a valid email');
                       }
