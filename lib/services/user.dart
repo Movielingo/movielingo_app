@@ -5,10 +5,14 @@ class UserService {
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
 
-  Future<void> addUser(String userId, String name, String email) async {
+  Future<void> addUser(String userId, String name, String email,
+      String motherTongue, String language, String level) async {
     return await _usersCollection.doc(userId).set({
       'username': name,
       'email': email,
+      'motherTongue': motherTongue,
+      'language': language,
+      'level': level,
     });
   }
 
