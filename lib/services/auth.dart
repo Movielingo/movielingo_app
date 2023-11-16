@@ -1,5 +1,6 @@
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:movielingo_app/services/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,7 +47,11 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email.trim(), password: password.trim());
       User? user = result.user;
-      return _userfromFirebase(user!);
+
+      // create a new document for the user with the uid
+      await UserService().addUser(user!.uid, 'New User', user.email!);
+
+      return _userfromFirebase(user);
     } catch (e) {
       print(e.toString());
       return null;
