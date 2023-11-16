@@ -4,6 +4,13 @@ import 'package:movielingo_app/services/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final AuthService _singleton = AuthService._internal();
+
+  factory AuthService() {
+    return _singleton;
+  }
+
+  AuthService._internal();
 
   // create user obj based on FirebaseUser
   MyUser? _userfromFirebase(User? user) {
