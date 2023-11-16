@@ -16,16 +16,20 @@ class UserService {
     });
   }
 
-/*   Future<DocumentSnapshot> getUser(String userId) async {
+  Future<DocumentSnapshot> getUser(String userId) async {
     return _usersCollection.doc(userId).get();
-  } */
+  }
 
-/*   Future<void> updateUser(String userId, String name, String email) async {
+  Future<void> updateUser(String userId, String name, String email,
+      String motherTongue, String language, String level) async {
     return _usersCollection.doc(userId).update({
-      'name': name,
+      'username': name,
       'email': email,
+      'motherTongue': motherTongue,
+      'language': language,
+      'level': level,
     });
-  } */
+  }
 
 /*   Future<void> deleteUser(String userId) async {
     return _usersCollection.doc(userId).delete();
