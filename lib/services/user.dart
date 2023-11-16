@@ -1,0 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserService {
+  // get the users collection from firestore
+  final CollectionReference _usersCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  Future<void> addUser(String userId, String name, String email,
+      String motherTongue, String language, String level) async {
+    return await _usersCollection.doc(userId).set({
+      'username': name,
+      'email': email,
+      'motherTongue': motherTongue,
+      'language': language,
+      'level': level,
+    });
+  }
+
+  Future<DocumentSnapshot> getUser(String userId) async {
+    return _usersCollection.doc(userId).get();
+  }
+
+  Future<void> updateUser(String userId, String name, String email,
+      String motherTongue, String language, String level) async {
+    return _usersCollection.doc(userId).update({
+      'username': name,
+      'email': email,
+      'motherTongue': motherTongue,
+      'language': language,
+      'level': level,
+    });
+  }
+
+/*   Future<void> deleteUser(String userId) async {
+    return _usersCollection.doc(userId).delete();
+  } */
+}
