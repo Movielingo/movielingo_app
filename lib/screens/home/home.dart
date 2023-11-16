@@ -16,6 +16,13 @@ class Home extends StatelessWidget {
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
+            icon: const Icon(Icons.settings),
+            label: const Text('Profile'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
+          TextButton.icon(
             icon: const Icon(Icons.person),
             label: const Text('Logout'),
             onPressed: () async {
