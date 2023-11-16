@@ -15,7 +15,7 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
   // text field state
-  String name = '';
+  String username = '';
   String email = '';
   String password = '';
   String motherTongue = '';
@@ -56,7 +56,7 @@ class _SignUpState extends State<SignUp> {
                   validator: (val) => val!.isEmpty ? 'Enter a Username' : null,
                   style: const TextStyle(color: Colors.black),
                   onChanged: (val) {
-                    setState(() => name = val);
+                    setState(() => username = val);
                   }),
               const SizedBox(height: 20.0),
               TextFormField(
@@ -159,7 +159,12 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       dynamic result = await _auth.registerWithEmailAndPassword(
-                          name, email, password, motherTongue, language, level);
+                          username,
+                          email,
+                          password,
+                          motherTongue,
+                          language,
+                          level);
                       if (result == null) {
                         setState(() => error = 'Please supply a valid email');
                       }

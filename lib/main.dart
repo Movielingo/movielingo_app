@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           ),
           home: const Wrapper(),
           routes: {
-            '/profile': (context) => const Profile(),
+            '/profile': (context) => Profile(),
           }),
     );
   }
