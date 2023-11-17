@@ -4,7 +4,7 @@ import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user.dart';
 
 class Profile extends StatelessWidget {
-  Profile({super.key});
+  Profile({Key? key}) : super(key: key);
 
   final UserService _user = UserService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,7 +20,7 @@ class Profile extends StatelessWidget {
         elevation: 0.0,
       ),
       body: FutureBuilder<MyUserData>(
-        future: _user.getUser(userId), // replace userId with actual user id
+        future: _user.getUser(userId),
         builder: (BuildContext context, AsyncSnapshot<MyUserData> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -29,9 +29,35 @@ class Profile extends StatelessWidget {
               return Text('Error: ${snapshot.error}');
             } else {
               MyUserData? data = snapshot.data;
-              return Text(
-                  'Name: ${data?.username}\nEmail: ${data?.email}\nMother Tongue: ${data?.motherTongue}\nLanguage: ${data?.language}\nLevel: ${data?.level}');
-              // Add more fields as needed
+              return Column(
+                children: <Widget>[
+                  Text(
+                      'Username: ${data?.username}\nEmail: ${data?.email}\nMother Tongue: ${data?.motherTongue}\nLanguage: ${data?.language}\nLevel: ${data?.level}'),
+                  ElevatedButton(
+                    child: const Text('Edit Profile'),
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  initialValue: data?.username,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Username'),
+                                ),
+                                TextFormField(
+                                  initialValue: data?.motherTongue,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Mother Tongue'),
+                                ),
+                              ],
+                            );
+                          });
+                    },
+                  ),
+                ],
+              );
             }
           }
         },
