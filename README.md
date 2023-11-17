@@ -25,16 +25,23 @@ If you're new to Flutter, these resources will help you hit the ground running:
 ## ⚙️ Installation Guide
 
 1. **Clone the Repository**:
+
    ```
    git clone https://github.com/yourusername/movielingo_app.git
    ```
+
 2. **Setup Environment**:
+
    - Install Flutter and Dart SDKs: Instructions available [here](https://flutter.dev/docs/get-started/install).
+
 3. **Install Dependencies**:
+
    ```
    flutter pub get
    ```
+
 4. **Run the Application**:
+
    ```
    flutter run
    ```
