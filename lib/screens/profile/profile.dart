@@ -29,10 +29,10 @@ class _ProfileState extends State<Profile> {
     language = '';
     level = '';
     error = '';
-    loadInitialData();
+    _loadInitialData();
   }
 
-  void loadInitialData() async {
+  void _loadInitialData() async {
     String userId = _auth.currentUser?.uid ?? '';
     MyUserData? data = await _user.getUser(userId);
     setState(() {
@@ -43,13 +43,29 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  void _deleteUser() async {
+    try {
+      String userId = _auth.currentUser?.uid ?? '';
+      await _user.deleteUser(userId);
+      await _auth.currentUser?.delete();
+      await _auth.signOut();
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushReplacementNamed('/');
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        error = 'Failed to delete user';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(185, 246, 202, 1),
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.greenAccent[400],
         elevation: 0.0,
       ),
       body: Padding(
@@ -57,11 +73,14 @@ class _ProfileState extends State<Profile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Username: $username', style: const TextStyle(fontSize: 16)),
+            Text('Username: $username',
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
             Text('Mother Tongue: $motherTongue',
-                style: const TextStyle(fontSize: 16)),
-            Text('Language: $language', style: const TextStyle(fontSize: 16)),
-            Text('Level: $level', style: const TextStyle(fontSize: 16)),
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
+            Text('Language: $language',
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
+            Text('Level: $level',
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
             const SizedBox(height: 20),
             ElevatedButton(
               child: const Text('Edit Profile'),
@@ -140,18 +159,51 @@ class _ProfileState extends State<Profile> {
                             Navigator.pop(context);
                           },
                         ),
-                        const SizedBox(height: 12.0),
-                        Text(
-                          error,
-                          style: const TextStyle(
-                              color: Colors.red, fontSize: 14.0),
-                        )
                       ],
                     );
                   },
                 );
               },
             ),
+            const SizedBox(height: 12.0),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red[400],
+              ),
+              child: const Text('Delete Profile'),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Delete Profile'),
+                      content: const Text(
+                          'Are you sure you want to delete your profile? This action cannot be undone. All your data will be lost and you will be logged out.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Delete'),
+                          onPressed: () async {
+                            _deleteUser();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 12.0),
+            Text(
+              error,
+              style: const TextStyle(color: Colors.red, fontSize: 14.0),
+            )
           ],
         ),
       ),

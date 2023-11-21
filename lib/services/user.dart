@@ -4,7 +4,7 @@ import 'package:movielingo_app/models/myuser.dart';
 class UserService {
   // get the users collection from firestore
   final CollectionReference _usersCollection =
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('Users');
 
   Future<void> addUser(String userId, String username, String email,
       String motherTongue, String language, String level) async {
@@ -39,7 +39,7 @@ class UserService {
     });
   }
 
-/*   Future<void> deleteUser(String userId) async {
+  Future<void> deleteUser(String userId) async {
     return _usersCollection.doc(userId).delete();
-  } */
+  }
 }
