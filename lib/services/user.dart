@@ -29,11 +29,10 @@ class UserService {
     );
   }
 
-  Future<void> updateUser(String userId, String name, String email,
-      String motherTongue, String language, String level) async {
+  Future<void> updateUser(String userId, String username, String motherTongue,
+      String language, String level) async {
     return _usersCollection.doc(userId).update({
-      'username': name,
-      'email': email,
+      'username': username,
       'motherTongue': motherTongue,
       'language': language,
       'level': level,
