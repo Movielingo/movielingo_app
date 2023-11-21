@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
+import 'package:movielingo_app/screens/profile/profile.dart';
 import 'package:movielingo_app/service.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -27,13 +28,15 @@ class MyApp extends StatelessWidget {
       initialData: null,
       value: AuthService().user,
       child: MaterialApp(
-        title: 'MovieLingo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
-          useMaterial3: true,
-        ),
-        home: const Wrapper(),
-      ),
+          title: 'MovieLingo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+            useMaterial3: true,
+          ),
+          home: const Wrapper(),
+          routes: {
+            '/profile': (context) => Profile(),
+          }),
     );
   }
 }

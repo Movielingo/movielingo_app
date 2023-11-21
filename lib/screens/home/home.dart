@@ -9,12 +9,19 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.greenAccent[100],
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('MovieLingo'),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.greenAccent[400],
         elevation: 0.0,
         actions: <Widget>[
+          TextButton.icon(
+            icon: const Icon(Icons.settings),
+            label: const Text('Profile'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profile');
+            },
+          ),
           TextButton.icon(
             icon: const Icon(Icons.person),
             label: const Text('Logout'),
