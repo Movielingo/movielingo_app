@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
 
-import '../../services/movie_service.dart';
+import '../../services/media_service.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -9,11 +9,19 @@ class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   void on_push_get_movie_by_id() {
-    getMovieById('FwJQcNYOHi2rVRRj46j1');
+    getMediaById('EnglishMedia', 'rcSnGoKIurMUB6AG2Rio');
   }
 
   void on_push_get_all_movies() {
-    getAllMovies();
+    getAllMovies('EnglishMedia', 'fantasy');
+  }
+
+  void on_push_get_all_series() {
+    getAllSeries('EnglishMedia');
+  }
+
+  void on_push_get_all_media() {
+    getAllMedia('EnglishMedia', null, 'harry potter');
   }
 
   @override
@@ -40,11 +48,19 @@ class Home extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: on_push_get_movie_by_id,
-              child: const Text('get movie by id'),
+              child: const Text('get media by id'),
             ),
             ElevatedButton(
               onPressed: on_push_get_all_movies,
               child: const Text('get all movies'),
+            ),
+            ElevatedButton(
+              onPressed: on_push_get_all_series,
+              child: const Text('get all series'),
+            ),
+            ElevatedButton(
+              onPressed: on_push_get_all_media,
+              child: const Text('get all media'),
             )
           ],
         ),
