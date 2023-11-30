@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:movielingo_app/screens/wrapper.dart';
+import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/screens/profile/profile.dart';
-import 'package:movielingo_app/service.dart';
+import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:provider/provider.dart';
-import 'package:movielingo_app/models/myuser.dart';
 
 import 'firebase_options.dart';
 
@@ -53,7 +52,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   void on_button_push() {
     print('button push');
-    get_all_movies();
   }
 
   @override
