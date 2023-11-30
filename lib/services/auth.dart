@@ -1,15 +1,24 @@
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:movielingo_app/services/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final AuthService _singleton = AuthService._internal();
+
+  factory AuthService() {
+    return _singleton;
+  }
+
+  AuthService._internal();
 
   // create user obj based on FirebaseUser
   MyUser? _userfromFirebase(User? user) {
     return user != null ? MyUser(uid: user.uid) : null;
   }
 
-  // auth change user stream that returns back a user whenever there is a change in authentication
+  // auth change user stream that returns back a user whenever there is a
+  // change in authentication
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_userfromFirebase);
   }
@@ -40,12 +49,23 @@ class AuthService {
   }
 
   // register with email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String name,
+      String email,
+      String password,
+      String motherTongue,
+      String language,
+      String level) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email.trim(), password: password.trim());
       User? user = result.user;
-      return _userfromFirebase(user!);
+
+      // create a new document for the user with the uid
+      await UserService()
+          .addUser(user!.uid, name, user.email!, motherTongue, language, level);
+
+      return _userfromFirebase(user);
     } catch (e) {
       print(e.toString());
       return null;
@@ -53,7 +73,6 @@ class AuthService {
   }
 
   // sign out
-
   Future signOut() async {
     try {
       return await _auth.signOut();

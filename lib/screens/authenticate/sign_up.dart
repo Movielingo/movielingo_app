@@ -15,8 +15,12 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
   // text field state
+  String username = '';
   String email = '';
   String password = '';
+  String motherTongue = '';
+  String language = '';
+  String level = '';
   String error = '';
 
   @override
@@ -44,7 +48,20 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 20.0),
               TextFormField(
                   decoration: const InputDecoration(
-                    hintText: 'Email',
+                    hintText: 'Username*',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (val) => val!.isEmpty ? 'Enter a Username' : null,
+                  style: const TextStyle(color: Colors.black),
+                  onChanged: (val) {
+                    setState(() => username = val);
+                  }),
+              const SizedBox(height: 20.0),
+              TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Email*',
                     hintStyle: TextStyle(color: Colors.grey),
                     fillColor: Colors.white,
                     filled: true,
@@ -57,7 +74,7 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 20.0),
               TextFormField(
                 decoration: const InputDecoration(
-                  hintText: 'Password',
+                  hintText: 'Password*',
                   hintStyle: TextStyle(color: Colors.grey),
                   fillColor: Colors.white,
                   filled: true,
@@ -71,6 +88,67 @@ class _SignUpState extends State<SignUp> {
                 },
               ),
               const SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
+              TextFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Your Mother Tongue*',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  validator: (val) =>
+                      val!.isEmpty ? 'Enter your mother tongue' : null,
+                  style: const TextStyle(color: Colors.black),
+                  onChanged: (val) {
+                    setState(() => motherTongue = val);
+                  }),
+              const SizedBox(height: 20.0),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  hintText: 'Language you want to learn*',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                value: language.isEmpty ? null : language,
+                onChanged: (val) {
+                  setState(() => language = val ?? '');
+                },
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Select the language you want to learn'
+                    : null,
+                items: <String>['German', 'English']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20.0),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  hintText: 'Your Level*',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                value: level.isEmpty ? null : level,
+                onChanged: (val) {
+                  setState(() => level = val ?? '');
+                },
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Select your level in the language you want to learn'
+                    : null,
+                items: <String>['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.greenAccent[400],
@@ -81,7 +159,12 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       dynamic result = await _auth.registerWithEmailAndPassword(
-                          email, password);
+                          username,
+                          email,
+                          password,
+                          motherTongue,
+                          language,
+                          level);
                       if (result == null) {
                         setState(() => error = 'Please supply a valid email');
                       }
