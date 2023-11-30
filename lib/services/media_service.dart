@@ -143,5 +143,3 @@ Future<List<Series>?> getAllSeries(String mediaLanguage,
     LoggerSingleton().logger.e('Error when fetching all series: ', e);
   }
 }
-
-//https://levelup.gitconnected.com/firestore-full-text-search-at-no-extra-cost-ee148856685

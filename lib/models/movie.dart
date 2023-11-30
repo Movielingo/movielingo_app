@@ -9,7 +9,6 @@ class Movie extends Media {
   final int lengthMin;
   final int release;
   final CSRFVocabCounts vocabCounts;
-  // Other Movie-specific properties
 
   Movie({
     required String id,
