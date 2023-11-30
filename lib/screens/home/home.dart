@@ -8,26 +8,25 @@ class Home extends StatelessWidget {
 
   final AuthService _auth = AuthService();
 
-  void on_push_get_movie_by_id() {
+  void onPushGetMovieById() {
     getMediaById('EnglishMedia', 'rcSnGoKIurMUB6AG2Rio');
   }
 
-  void on_push_get_all_movies() {
+  void onPushGetAllMovies() {
     getAllMovies('EnglishMedia', 'fantasy');
   }
 
-  void on_push_get_all_series() {
+  void onPushGetAllSeries() {
     getAllSeries('EnglishMedia');
   }
 
-  void on_push_get_all_media() {
+  void onPushGetAllMedia() {
     getAllMedia('EnglishMedia', null, 'harry potter');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('MovieLingo'),
@@ -55,19 +54,19 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: on_push_get_movie_by_id,
+              onPressed: onPushGetMovieById,
               child: const Text('get media by id'),
             ),
             ElevatedButton(
-              onPressed: on_push_get_all_movies,
+              onPressed: onPushGetAllMovies,
               child: const Text('get all movies'),
             ),
             ElevatedButton(
-              onPressed: on_push_get_all_series,
+              onPressed: onPushGetAllSeries,
               child: const Text('get all series'),
             ),
             ElevatedButton(
-              onPressed: on_push_get_all_media,
+              onPressed: onPushGetAllMedia,
               child: const Text('get all media'),
             )
           ],
