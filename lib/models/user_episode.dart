@@ -4,7 +4,6 @@ class UserEpisode {
   final int progress;
   final String translationLanguage;
   final String mediaLanguage;
-  final String image;
 
   UserEpisode({
     required this.mediaId,
@@ -12,6 +11,15 @@ class UserEpisode {
     required this.progress,
     required this.translationLanguage,
     required this.mediaLanguage,
-    required this.image,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'mediaId': mediaId,
+      'title': title,
+      'progress': progress,
+      'translationLanguage': translationLanguage,
+      'mediaLanguage': mediaLanguage,
+    };
+  }
 }
