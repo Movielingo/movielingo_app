@@ -6,7 +6,6 @@ import 'package:movielingo_app/models/user_movie.dart';
 import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
 
-// TODO: the document id should not be the media id, but a new and unique id
 Future<void> addMediaToUser(
     String userId, String mediaLanguage, String mediaId, int progress) async {
   LoggerSingleton()
