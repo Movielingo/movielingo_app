@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/services/user_media_service.dart';
 
 import '../../services/media_service.dart';
 
@@ -7,6 +9,7 @@ class Home extends StatelessWidget {
   Home({super.key});
 
   final AuthService _auth = AuthService();
+  final FirebaseAuth _user = FirebaseAuth.instance;
 
   void onPushGetMovieById() {
     getMediaById('EnglishMedia', 'rcSnGoKIurMUB6AG2Rio');
@@ -22,6 +25,21 @@ class Home extends StatelessWidget {
 
   void onPushGetAllMedia() {
     getAllMedia('EnglishMedia', null, 'harry potter');
+  }
+
+  void onPushAddMediaToUser() {
+    String userId = _user.currentUser?.uid ?? '';
+    addMediaToUser(userId, 'EnglishMedia', 'TOg24pwrOHGHb9vkAzXB', 0);
+  }
+
+  void onPushGetUserMedia() {
+    String userId = _user.currentUser?.uid ?? '';
+    getAllUserMedia(userId);
+  }
+
+  void onPushUpdateUserMediaProgress() {
+    String userId = _user.currentUser?.uid ?? '';
+    updateUserMediaProgress(userId, 'TOg24pwrOHGHb9vkAzXB', 50);
   }
 
   @override
@@ -68,7 +86,16 @@ class Home extends StatelessWidget {
             ElevatedButton(
               onPressed: onPushGetAllMedia,
               child: const Text('get all media'),
-            )
+            ),
+            ElevatedButton(
+                onPressed: onPushAddMediaToUser,
+                child: const Text('add Media to User')),
+            ElevatedButton(
+                onPressed: onPushGetUserMedia,
+                child: const Text('get User Media')),
+            ElevatedButton(
+                onPressed: onPushUpdateUserMediaProgress,
+                child: const Text('update User Media Progress to 50')),
           ],
         ),
       ),
