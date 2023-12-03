@@ -6,12 +6,28 @@ import 'package:movielingo_app/models/user_movie.dart';
 import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
 
+// TODO: the document id should not be the media id, but a new and unique id
 Future<void> addMediaToUser(
     String userId, String mediaLanguage, String mediaId, int progress) async {
   LoggerSingleton()
       .logger
       .i('Adding media with id $mediaId to library of user with id $userId...');
   try {
+    // Check if media already exists in the user's library
+    var userMediaCollection =
+        db.collection('Users').doc(userId).collection('UserMedia');
+    var existingMedia = await userMediaCollection
+        .where('mediaId', isEqualTo: mediaId)
+        .limit(1)
+        .get();
+
+    if (existingMedia.docs.isNotEmpty) {
+      // Media already exists, log and return
+      LoggerSingleton().logger.i('Media already exists in user library');
+      return;
+    }
+
+    // If media doesn't exist, proceed with adding
     Media? media = await getMediaById(mediaLanguage, mediaId);
     var language = mediaLanguage == 'EnglishMedia' ? 'english' : 'french';
     if (media != null) {
@@ -38,12 +54,7 @@ Future<void> addMediaToUser(
         throw Exception('Unknown media type');
       }
 
-      await db
-          .collection('Users')
-          .doc(userId)
-          .collection('UserMedia')
-          .doc(mediaId)
-          .set(mediaData);
+      await userMediaCollection.doc().set(mediaData);
       LoggerSingleton().logger.i('Media added successfully to user library');
     } else {
       LoggerSingleton().logger.e('No media found with id: $mediaId');
