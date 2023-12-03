@@ -29,7 +29,17 @@ class Home extends StatelessWidget {
 
   void onPushAddMediaToUser() {
     String userId = _user.currentUser?.uid ?? '';
-    addMediaToUser(userId, 'EnglishMedia', '5OufgApSdRJIqtYDgNdL', 0);
+    addMediaToUser(userId, 'EnglishMedia', 'TOg24pwrOHGHb9vkAzXB', 0);
+  }
+
+  void onPushGetUserMedia() {
+    String userId = _user.currentUser?.uid ?? '';
+    getAllUserMedia(userId);
+  }
+
+  void onPushUpdateUserMediaProgress() {
+    String userId = _user.currentUser?.uid ?? '';
+    updateUserMediaProgress(userId, 'TOg24pwrOHGHb9vkAzXB', 50);
   }
 
   @override
@@ -79,7 +89,13 @@ class Home extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: onPushAddMediaToUser,
-                child: const Text('add Media to User'))
+                child: const Text('add Media to User')),
+            ElevatedButton(
+                onPressed: onPushGetUserMedia,
+                child: const Text('get User Media')),
+            ElevatedButton(
+                onPressed: onPushUpdateUserMediaProgress,
+                child: const Text('update User Media Progress to 50')),
           ],
         ),
       ),
