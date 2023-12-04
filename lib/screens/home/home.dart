@@ -12,19 +12,19 @@ class Home extends StatelessWidget {
   final FirebaseAuth _user = FirebaseAuth.instance;
 
   void onPushGetMovieById() {
-    getMediaById('EnglishMedia', 'rcSnGoKIurMUB6AG2Rio');
+    getMediaById('EnglishMedia', 'TImmVhC7VDA8UG1pQGRJ');
   }
 
   void onPushGetAllMovies() {
-    getAllMovies('EnglishMedia', 'fantasy');
+    getAllMovies('EnglishMedia', 'german');
   }
 
   void onPushGetAllSeries() {
-    getAllSeries('EnglishMedia');
+    getAllSeries('EnglishMedia', 'german');
   }
 
   void onPushGetAllMedia() {
-    getAllMedia('EnglishMedia', null, 'harry potter');
+    getAllMedia('EnglishMedia', 'german', null, 'harry potter');
   }
 
   void onPushAddMediaToUser() {

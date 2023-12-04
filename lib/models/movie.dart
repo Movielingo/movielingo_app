@@ -14,6 +14,7 @@ class Movie extends Media {
     required String id,
     required String title,
     required String description,
+    required String imgRef,
     required List<Genre> genres,
     required String translationLanguage,
     required this.director,
@@ -24,6 +25,7 @@ class Movie extends Media {
           id: id,
           title: title,
           description: description,
+          imgRef: imgRef,
           genres: genres,
           translationLanguage: translationLanguage,
         );
@@ -33,6 +35,7 @@ class Movie extends Media {
     return Movie(
       id: snapshot.id,
       title: data['title'],
+      imgRef: data['imgRef'],
       description: data['description'],
       genres: Genre.getGenresFromSnapshotData(data),
       translationLanguage: data['translationLanguage'],
