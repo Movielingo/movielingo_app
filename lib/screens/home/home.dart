@@ -1,16 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:movielingo_app/services/user_media_service.dart';
 
 import '../../services/media_service.dart';
+import '../../services/user_service.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
 
   final AuthService _auth = AuthService();
   final FirebaseAuth _user = FirebaseAuth.instance;
-
+  final UserService userService = UserService();
   void onPushGetMovieById() {
     getMediaById('EnglishMedia', 'TImmVhC7VDA8UG1pQGRJ');
   }
@@ -27,14 +29,22 @@ class Home extends StatelessWidget {
     getAllMedia('EnglishMedia', 'german', null, 'harry potter');
   }
 
-  void onPushAddMediaToUser() {
+  Future<void> onPushAddMovieToUser() async {
     String userId = _user.currentUser?.uid ?? '';
-    addMediaToUser(userId, 'EnglishMedia', 'TOg24pwrOHGHb9vkAzXB', 0);
+    MyUserData user = await userService.getUser(userId);
+    addMovieToUser(user, 'EnglishMedia', 'german', '8QBorkTd7658Rjr6nUeW');
+  }
+
+  Future<void> onPushAddEpisodeToUser() async {
+    String userId = _user.currentUser?.uid ?? '';
+    MyUserData user = await userService.getUser(userId);
+    addEpisodeToUser(
+        user, 'EnglishMedia', 'german', 'EV923jXOfbsm6oXSDf9a', 1, 1);
   }
 
   void onPushGetUserMedia() {
     String userId = _user.currentUser?.uid ?? '';
-    getAllUserMedia(userId);
+    getUserMedia(userId);
   }
 
   void onPushUpdateUserMediaProgress() {
@@ -88,8 +98,11 @@ class Home extends StatelessWidget {
               child: const Text('get all media'),
             ),
             ElevatedButton(
-                onPressed: onPushAddMediaToUser,
-                child: const Text('add Media to User')),
+                onPressed: onPushAddMovieToUser,
+                child: const Text('add Movie to User')),
+            ElevatedButton(
+                onPressed: onPushAddEpisodeToUser,
+                child: const Text('add Episode to User')),
             ElevatedButton(
                 onPressed: onPushGetUserMedia,
                 child: const Text('get User Media')),

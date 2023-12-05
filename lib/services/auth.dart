@@ -1,6 +1,6 @@
-import 'package:movielingo_app/models/myuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:movielingo_app/services/user.dart';
+import 'package:movielingo_app/models/myuser.dart';
+import 'package:movielingo_app/services/user_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

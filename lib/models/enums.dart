@@ -20,3 +20,26 @@ enum Genre {
     }).toList();
   }
 }
+
+enum WordType {
+  verb,
+  adv,
+  noun,
+  adj,
+  adp,
+  cconj,
+  int,
+  part,
+  propn,
+  punct,
+  sconj,
+  sym,
+  det,
+  pron,
+  num,
+  aux,
+  intj,
+  x,
+}
+
+enum CSRFLevel { a1, a2, b1, b2, c1, c2 }

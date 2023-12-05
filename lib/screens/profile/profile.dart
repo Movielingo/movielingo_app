@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
-import 'package:movielingo_app/services/user.dart';
+import 'package:movielingo_app/services/user_service.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -32,6 +32,7 @@ class _ProfileState extends State<Profile> {
     _loadInitialData();
   }
 
+// todo why is everything nullable?
   void _loadInitialData() async {
     String userId = _auth.currentUser?.uid ?? '';
     MyUserData? data = await _user.getUser(userId);
@@ -39,7 +40,7 @@ class _ProfileState extends State<Profile> {
       username = data.username ?? '';
       motherTongue = data.motherTongue ?? '';
       language = data.language ?? '';
-      level = data.level ?? '';
+      // todo level = data.level ?? '';
     });
   }
 

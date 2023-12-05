@@ -1,6 +1,6 @@
 import 'enums.dart';
 
-class Media {
+abstract class Media {
   final String id;
   final String title;
   final String description;
