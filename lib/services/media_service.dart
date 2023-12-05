@@ -39,7 +39,8 @@ Map<String, bool> _generateTrigrams(String text) {
   return trigrams;
 }
 
-Future<List<Media>?> getAllMedia(String mediaLanguage,
+Future<List<Media>?> getAllMedia(
+    String mediaLanguage, String translationLanguage,
     [String? genre, String? searchTerm]) async {
   LoggerSingleton().logger.i(
       'Fetching all media with parameters: genre:[$genre], seachTerm: $searchTerm');
@@ -60,6 +61,7 @@ Future<List<Media>?> getAllMedia(String mediaLanguage,
   } else if (genre != null) {
     snapshot = await db
         .collection(mediaLanguage)
+        .where('translationLanguage', isEqualTo: translationLanguage)
         .where('genres', arrayContains: genre)
         .get();
   } else {
@@ -87,19 +89,25 @@ Future<List<Media>?> getAllMedia(String mediaLanguage,
   return media;
 }
 
-Future<List<Movie>?> getAllMovies(String mediaLanguage, [String? genre]) async {
-  LoggerSingleton().logger.i('Fetching all series...');
+Future<List<Movie>?> getAllMovies(
+    String mediaLanguage, String translationLanguage,
+    [String? genre]) async {
+  LoggerSingleton().logger.i('Fetching all movies...');
   QuerySnapshot querySnapshot;
   if (genre != null) {
     querySnapshot = await db
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: false)
         .where('genres', arrayContains: genre)
+        .where('translationLanguage', isEqualTo: translationLanguage)
         .get();
   } else {
     querySnapshot = await db
         .collection(mediaLanguage)
+        .where('genres', arrayContainsAny: ['action', 'fantasy'])
         .where('isSeries', isEqualTo: false)
+        .where('translationLanguage', isEqualTo: translationLanguage)
+        //.orderBy('genres')
         .get();
   }
 
@@ -115,7 +123,8 @@ Future<List<Movie>?> getAllMovies(String mediaLanguage, [String? genre]) async {
   }
 }
 
-Future<List<Series>?> getAllSeries(String mediaLanguage,
+Future<List<Series>?> getAllSeries(
+    String mediaLanguage, String translationLanguage,
     [String? genre]) async {
   LoggerSingleton().logger.i('Fetching all series...');
   QuerySnapshot querySnapshot;
@@ -124,11 +133,13 @@ Future<List<Series>?> getAllSeries(String mediaLanguage,
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: true)
         .where('genres', arrayContains: genre)
+        .where('translationLanguage', isEqualTo: translationLanguage)
         .get();
   } else {
     querySnapshot = await db
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: true)
+        .where('translationLanguage', isEqualTo: translationLanguage)
         .get();
   }
 

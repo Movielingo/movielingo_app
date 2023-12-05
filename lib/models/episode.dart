@@ -6,6 +6,7 @@ class Episode {
   final String description;
   final int season;
   final CSRFVocabCounts vocabCounts;
+  final String imgRef;
 
   Episode({
     required this.episode,
@@ -13,6 +14,7 @@ class Episode {
     required this.description,
     required this.season,
     required this.vocabCounts,
+    required this.imgRef,
   });
 
   factory Episode.fromSnapshotData(dynamic data) {
@@ -22,6 +24,7 @@ class Episode {
       description: data['description'],
       season: data['season'],
       vocabCounts: CSRFVocabCounts.fromSnapshot(data),
+      imgRef: data['imgRef'],
     );
     return a;
   }

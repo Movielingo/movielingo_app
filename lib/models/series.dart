@@ -13,6 +13,7 @@ class Series extends Media {
     required String id,
     required String title,
     required String description,
+    required String imgRef,
     required List<Genre> genres,
     required String translationLanguage,
     required this.releaseFirstEpisode,
@@ -22,6 +23,7 @@ class Series extends Media {
           id: id,
           title: title,
           description: description,
+          imgRef: imgRef,
           genres: genres,
           translationLanguage: translationLanguage,
         );
@@ -32,6 +34,7 @@ class Series extends Media {
       id: snapshot.id,
       title: data['title'],
       description: data['description'],
+      imgRef: data['imgRef'],
       genres: Genre.getGenresFromSnapshotData(data),
       translationLanguage: data['translationLanguage'],
       releaseFirstEpisode: data['releaseFirstEpisode'],
