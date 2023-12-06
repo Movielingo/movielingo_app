@@ -8,6 +8,7 @@ class UserVocabulary extends Vocabulary {
   int box;
   DateTime dueDate;
   String userMediaId;
+  String? id;
 
   UserVocabulary({
     required wordLemma,
@@ -16,6 +17,7 @@ class UserVocabulary extends Vocabulary {
     required sentences,
     required voiceUrl,
     required translationLanguage,
+    id,
     required this.dueDate,
     required this.box,
     required this.userMediaId,
@@ -43,6 +45,7 @@ class UserVocabulary extends Vocabulary {
       box: data['box'],
       translationLanguage: data['translationLanguage'],
       userMediaId: data['userMediaId'],
+      id: snapshot.id,
     );
   }
 

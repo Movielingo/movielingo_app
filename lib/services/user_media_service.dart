@@ -225,5 +225,20 @@ Future<int> getAllUserDueVocabulary(String userId) async {
   return vocabularies.size;
 }
 
-//Future<void> updateUserVocabulary() {}
-// todo use transaction
+Future<void> updateUserVocabulary(
+    List<UserVocabulary> vocabularies, String userId) async {
+  await db.runTransaction((Transaction transaction) async {
+    for (var vocabulary in vocabularies) {
+      DocumentReference docRef = db
+          .collection('Users')
+          .doc(userId)
+          .collection('Vocabularies')
+          .doc(vocabulary.id);
+      transaction.update(docRef, vocabulary.toMap());
+    }
+  }).then((result) {
+    LoggerSingleton().logger.i('Transaction completed successfully');
+  }).catchError((error) {
+    LoggerSingleton().logger.e('Transaction failed: $error');
+  });
+}
