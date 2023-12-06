@@ -41,6 +41,11 @@ class Home extends StatelessWidget {
     getAllMedia('EnglishMedia', 'german', null, 'harry potter');
   }
 
+  void onPushGetDueVocabularySessionForMedia() {
+    String userId = _user.currentUser?.uid ?? '';
+    getDueVocabularySessionForMedia(userId, 'gNusm32GAmpaVpUWab3m');
+  }
+
   Future<void> onPushAddMovieToUser() async {
     String userId = _user.currentUser?.uid ?? '';
     MyUserData user = await userService.getUser(userId);
@@ -57,6 +62,11 @@ class Home extends StatelessWidget {
   void onPushGetUserMedia() {
     String userId = _user.currentUser?.uid ?? '';
     getUserMedia(userId);
+  }
+
+  void onPushGetAllUserDueVocabulary() {
+    String userId = _user.currentUser?.uid ?? '';
+    getAllUserDueVocabulary(userId);
   }
 
   void onPushUpdateUserMediaProgress() {
@@ -130,6 +140,12 @@ class Home extends StatelessWidget {
             ElevatedButton(
                 onPressed: onPushGetUserMedia,
                 child: const Text('get User Media')),
+            ElevatedButton(
+                onPressed: onPushGetDueVocabularySessionForMedia,
+                child: const Text('get due vocabulary session for user media')),
+            ElevatedButton(
+                onPressed: onPushGetAllUserDueVocabulary,
+                child: const Text('get all user due vocabulary')),
             ElevatedButton(
                 onPressed: onPushUpdateUserMediaProgress,
                 child: const Text('update User Media Progress to 50')),

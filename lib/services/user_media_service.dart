@@ -11,7 +11,9 @@ import 'package:movielingo_app/singletons/logger.dart';
 
 import '../models/series.dart';
 import '../models/user_media.dart';
+import '../models/user_vocabulary.dart';
 
+// todo refactor => factory constructor in UserMovie class
 final FirebaseFirestore db = FirebaseFirestore.instance;
 UserMovie createUserMovie(
     Movie media, String translationLanguage, String mediaLanguage) {
@@ -25,6 +27,7 @@ UserMovie createUserMovie(
   );
 }
 
+// todo refactor => factory constructor in UserMovie class
 UserEpisode createUserEpisode(Media media, String translationLanguage,
     String mediaLanguage, int episode, int season) {
   return UserEpisode(
@@ -191,27 +194,36 @@ Future<void> updateUserMediaProgress(
 }
 
 Future<List<Vocabulary>> getDueVocabularySessionForMedia(
-    // todo adapt for episode
-
-    String userId,
-    String mediaId,
+    String userId, String mediaId,
     {int sessionSize = 20}) async {
-  return await db
+  List<UserVocabulary> vocabularies = await db
       .collection('Users')
       .doc(userId)
-      .collection('UserVocabularies')
-      .doc(mediaId)
       .collection('Vocabularies')
       .where('dueDate', isLessThanOrEqualTo: DateTime.now())
-      .where('mediaId', isEqualTo: mediaId)
+      .where('userMediaId', isEqualTo: mediaId)
       .orderBy('dueDate')
       .limit(sessionSize)
       .get()
       .then((value) =>
-          value.docs.map((e) => Vocabulary.fromSnapshot(e)).toList());
-} // todo composite index necessary
+          value.docs.map((e) => UserVocabulary.fromSnapshot(e)).toList());
+  for (UserVocabulary vocab in vocabularies) {
+    LoggerSingleton().logger.i(vocab.wordLemma);
+  }
+  return vocabularies;
+}
 
-// Future<int> getAllUserDueVocabulary() {}
-//
-// Future<void> updateUserVocabulary() {}
+Future<int> getAllUserDueVocabulary(String userId) async {
+  QuerySnapshot vocabularies = await db
+      .collection('Users')
+      .doc(userId)
+      .collection('Vocabularies')
+      .where('dueDate', isLessThanOrEqualTo: DateTime.now())
+      .orderBy('dueDate')
+      .get();
+  LoggerSingleton().logger.i('Total due vocabularies: ${vocabularies.size}');
+  return vocabularies.size;
+}
+
+//Future<void> updateUserVocabulary() {}
 // todo use transaction
