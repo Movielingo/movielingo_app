@@ -7,6 +7,7 @@ import 'enums.dart';
 class UserVocabulary extends Vocabulary {
   int box;
   DateTime dueDate;
+  String userMediaId;
 
   UserVocabulary({
     required wordLemma,
@@ -14,14 +15,17 @@ class UserVocabulary extends Vocabulary {
     required wordLevel,
     required sentences,
     required voiceUrl,
+    required translationLanguage,
     required this.dueDate,
     required this.box,
+    required this.userMediaId,
   }) : super(
           wordLemma: wordLemma,
           wordType: wordType,
           wordLevel: wordLevel,
           sentences: sentences,
           voiceUrl: voiceUrl,
+          translationLanguage: translationLanguage,
         );
 
   factory UserVocabulary.fromSnapshot(DocumentSnapshot snapshot) {
@@ -37,9 +41,24 @@ class UserVocabulary extends Vocabulary {
       voiceUrl: data['voiceUrl'],
       dueDate: data['dueDate'].toDate(),
       box: data['box'],
+      translationLanguage: data['translationLanguage'],
+      userMediaId: data['userMediaId'],
     );
   }
 
+  factory UserVocabulary.fromVocabulary(Vocabulary vocabulary, String mediaId) {
+    return UserVocabulary(
+      wordLemma: vocabulary.wordLemma,
+      wordType: vocabulary.wordType,
+      wordLevel: vocabulary.wordLevel,
+      sentences: vocabulary.sentences,
+      voiceUrl: vocabulary.voiceUrl,
+      dueDate: DateTime.now(),
+      box: 0,
+      translationLanguage: vocabulary.translationLanguage,
+      userMediaId: mediaId,
+    );
+  }
   Map<String, dynamic> toMap() {
     return {
       'lemma': wordLemma,
@@ -49,6 +68,8 @@ class UserVocabulary extends Vocabulary {
       'voiceUrl': voiceUrl,
       'box': box,
       'dueDate': dueDate,
+      'translationLanguage': translationLanguage,
+      'userMediaId': userMediaId,
     };
   }
 }

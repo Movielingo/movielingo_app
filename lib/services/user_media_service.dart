@@ -57,9 +57,7 @@ Future<void> addEpisodeToUser(
     var userMediaCollection =
         db.collection('Users').doc(user.id).collection('UserMedia');
     var existingMedia = await userMediaCollection
-        .where('mediaId',
-            isEqualTo:
-                seriesId) // todo check also for other fields edge case where user learns media in multiple languages
+        .where('mediaId', isEqualTo: seriesId)
         .where('season', isEqualTo: season)
         .where('episode', isEqualTo: episode)
         .limit(1)
@@ -79,14 +77,19 @@ Future<void> addEpisodeToUser(
       UserEpisode userEpisode = createUserEpisode(
           series, translationLanguage, mediaLanguage, episode, season);
       List<Vocabulary> vocabularies = await getEpisodeVocabularies(
-          mediaLanguage, seriesId, user.level!, season, episode);
+          mediaLanguage,
+          translationLanguage,
+          seriesId,
+          user.level!,
+          season,
+          episode);
 
       String newEpisodeId =
           await userMediaCollection.add(userEpisode.toMap()).then((value) {
         return value.id;
       });
-      addVocabulariesToUserMedia(vocabularies, user.id!,
-          newEpisodeId); // todo user id should be required => user.id instead of user.id!
+      addVocabulariesToUser(vocabularies, user.id!, newEpisodeId);
+      // todo user id should be required => user.id instead of user.id!
       LoggerSingleton().logger.i('Episode added successfully to user library');
     }
   } catch (e) {
@@ -104,9 +107,7 @@ Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
     var userMediaCollection =
         db.collection('Users').doc(user.id).collection('UserMedia');
     var existingMedia = await userMediaCollection
-        .where('mediaId',
-            isEqualTo:
-                movieId) // todo check also for other fields edge case where user learns media in multiple languages
+        .where('mediaId', isEqualTo: movieId)
         .limit(1)
         .get();
 
@@ -123,16 +124,15 @@ Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
     } else {
       UserMovie userMovie =
           createUserMovie(movie, translationLanguage, mediaLanguage);
-      List<Vocabulary> vocabularies =
-          await getMovieVocabularies(mediaLanguage, movieId, user.level!);
+      List<Vocabulary> vocabularies = await getMovieVocabularies(
+          mediaLanguage, translationLanguage, movieId, user.level!);
 
-      String newMovieId =
+      String newUserMovieId =
           await userMediaCollection.add(userMovie.toMap()).then((value) {
         return value.id;
       });
-      addVocabulariesToUserMedia(vocabularies, user.id!,
-          newMovieId); // todo user id should be required => user.id instead of user.id!
-      // todo add vocabulary to userMovie => user transaction?
+      addVocabulariesToUser(vocabularies, user.id!, newUserMovieId);
+      // todo user id should be required => user.id instead of user.id!
       LoggerSingleton().logger.i('Movie added successfully to user library');
     }
   } catch (e) {

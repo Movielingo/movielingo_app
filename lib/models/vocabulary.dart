@@ -9,6 +9,7 @@ class Vocabulary {
   final CSRFLevel wordLevel;
   final List<Sentence> sentences;
   final String voiceUrl;
+  final String translationLanguage;
 
   Vocabulary({
     required this.wordLemma,
@@ -16,6 +17,7 @@ class Vocabulary {
     required this.wordLevel,
     required this.sentences,
     required this.voiceUrl,
+    required this.translationLanguage,
   });
 
   factory Vocabulary.fromSnapshot(DocumentSnapshot snapshot) {
@@ -29,6 +31,7 @@ class Vocabulary {
           .map<Sentence>((data) => Sentence.fromSnapshot(data))
           .toList(),
       voiceUrl: data['voiceUrl'],
+      translationLanguage: data['translationLanguage'],
     );
   }
 
@@ -39,6 +42,7 @@ class Vocabulary {
       'wordLevel': wordLevel.name,
       'sentences': sentences.map((e) => e.toMap()).toList(),
       'voiceUrl': voiceUrl,
+      'translationLanguage': translationLanguage,
     };
   }
 }

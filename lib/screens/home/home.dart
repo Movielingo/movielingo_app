@@ -14,11 +14,11 @@ class Home extends StatelessWidget {
   final FirebaseAuth _user = FirebaseAuth.instance;
   final UserService userService = UserService();
   void onPushGetMovieById() {
-    getMediaById('EnglishMedia', '1MKupV25GYxO6DwPb7mX');
+    getMediaById('EnglishMedia', '1gYTGxdrTZHjqgxjunP1');
   }
 
   void onPushGetSeriesById() {
-    getMediaById('EnglishMedia', '4KcVpU6pFfuLUtJ02fRe');
+    getMediaById('EnglishMedia', 'evu4OehE2E4U7vHEW7cP');
   }
 
   void onPushGetAllMovies() {
@@ -44,14 +44,14 @@ class Home extends StatelessWidget {
   Future<void> onPushAddMovieToUser() async {
     String userId = _user.currentUser?.uid ?? '';
     MyUserData user = await userService.getUser(userId);
-    addMovieToUser(user, 'EnglishMedia', 'german', '8QBorkTd7658Rjr6nUeW');
+    addMovieToUser(user, 'EnglishMedia', 'german', '1gYTGxdrTZHjqgxjunP1');
   }
 
   Future<void> onPushAddEpisodeToUser() async {
     String userId = _user.currentUser?.uid ?? '';
     MyUserData user = await userService.getUser(userId);
     addEpisodeToUser(
-        user, 'EnglishMedia', 'german', 'EV923jXOfbsm6oXSDf9a', 1, 1);
+        user, 'EnglishMedia', 'german', 'evu4OehE2E4U7vHEW7cP', 1, 1);
   }
 
   void onPushGetUserMedia() {

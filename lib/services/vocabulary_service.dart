@@ -1,23 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movielingo_app/models/enums.dart';
+import 'package:movielingo_app/models/user_vocabulary.dart';
 
 import '../models/vocabulary.dart';
 import '../singletons/logger.dart';
 
 final FirebaseFirestore db = FirebaseFirestore.instance;
 
-Future<void> _processBatch(
-    List<Vocabulary> batch, String userId, String mediaId) async {
+Future<void> _processBatch(List<UserVocabulary> batch, String userId) async {
   WriteBatch batchWrite = db.batch();
   try {
     for (var vocabulary in batch) {
-      DocumentReference docRef = db
-          .collection('Users')
-          .doc(userId)
-          .collection('UserMedia')
-          .doc(mediaId)
-          .collection("Vocabularies")
-          .doc();
+      DocumentReference docRef =
+          db.collection('Users').doc(userId).collection("Vocabularies").doc();
       batchWrite.set(docRef, vocabulary.toMap());
     }
 
@@ -29,17 +24,20 @@ Future<void> _processBatch(
   }
 }
 
-Future<void> addVocabulariesToUserMedia(
+Future<void> addVocabulariesToUser(
     List<Vocabulary> vocabularies, String userId, String mediaId) async {
+  List<UserVocabulary> userVocabularies = vocabularies
+      .map((e) => UserVocabulary.fromVocabulary(e, mediaId))
+      .toList();
   const int batchSize = 500;
-  for (int i = 0; i < vocabularies.length; i += batchSize) {
-    int end = (i + batchSize < vocabularies.length)
+  for (int i = 0; i < userVocabularies.length; i += batchSize) {
+    int end = (i + batchSize < userVocabularies.length)
         ? i + batchSize
-        : vocabularies.length;
-    List<Vocabulary> batch = vocabularies.sublist(i, end);
+        : userVocabularies.length;
+    List<UserVocabulary> batch = userVocabularies.sublist(i, end);
 
     try {
-      await _processBatch(batch, userId, mediaId);
+      await _processBatch(batch, userId);
     } catch (e) {
       LoggerSingleton()
           .logger
@@ -73,24 +71,28 @@ List<String> _getQueryLevels(CSRFLevel level) {
   return queryLevels;
 }
 
-Future<List<Vocabulary>> getMovieVocabularies(
-    String mediaLanguage, String mediaId, CSRFLevel level) async {
+Future<List<Vocabulary>> getMovieVocabularies(String mediaLanguage,
+    String translationLanguage, String mediaId, CSRFLevel level) async {
   List<String> queryLevels = _getQueryLevels(level);
 
   return await db
       .collection('EnglishMedia')
       .doc(mediaId)
       .collection('Vocabularies')
-      .where('wordLevel',
-          whereIn:
-              queryLevels) // todo filter for translation language => adding in python service
+      .where('translationLanguage', isEqualTo: translationLanguage)
+      .where('wordLevel', whereIn: queryLevels)
       .get()
       .then((value) =>
           value.docs.map((e) => Vocabulary.fromSnapshot(e)).toList());
 }
 
-Future<List<Vocabulary>> getEpisodeVocabularies(String mediaLanguage,
-    String mediaId, CSRFLevel level, int season, int episode) async {
+Future<List<Vocabulary>> getEpisodeVocabularies(
+    String mediaLanguage,
+    String translationLanguage,
+    String mediaId,
+    CSRFLevel level,
+    int season,
+    int episode) async {
   List<String> queryLevels = _getQueryLevels(level);
 
   return await db
@@ -99,9 +101,8 @@ Future<List<Vocabulary>> getEpisodeVocabularies(String mediaLanguage,
       .collection('Vocabularies')
       .where('season', isEqualTo: season)
       .where('episode', isEqualTo: episode)
-      .where('wordLevel',
-          whereIn:
-              queryLevels) // todo filter for translation language => adding in python service
+      .where('translationLanguage', isEqualTo: translationLanguage)
+      .where('wordLevel', whereIn: queryLevels)
       .get()
       .then((value) =>
           value.docs.map((e) => Vocabulary.fromSnapshot(e)).toList());
