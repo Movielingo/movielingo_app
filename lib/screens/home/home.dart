@@ -14,15 +14,27 @@ class Home extends StatelessWidget {
   final FirebaseAuth _user = FirebaseAuth.instance;
   final UserService userService = UserService();
   void onPushGetMovieById() {
-    getMediaById('EnglishMedia', 'TImmVhC7VDA8UG1pQGRJ');
+    getMediaById('EnglishMedia', '1MKupV25GYxO6DwPb7mX');
+  }
+
+  void onPushGetSeriesById() {
+    getMediaById('EnglishMedia', '4KcVpU6pFfuLUtJ02fRe');
   }
 
   void onPushGetAllMovies() {
     getAllMovies('EnglishMedia', 'german');
   }
 
+  void onPushGetAllMoviesFilter() {
+    getAllMovies('EnglishMedia', 'german', ['fantasy']);
+  }
+
   void onPushGetAllSeries() {
     getAllSeries('EnglishMedia', 'german');
+  }
+
+  void onPushGetAllSeriesFilter() {
+    getAllSeries('EnglishMedia', 'german', ['comedy']);
   }
 
   void onPushGetAllMedia() {
@@ -83,19 +95,31 @@ class Home extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: onPushGetMovieById,
-              child: const Text('get media by id'),
+              child: const Text('get media by id (movie)'),
+            ),
+            ElevatedButton(
+              onPressed: onPushGetSeriesById,
+              child: const Text('get media by id (series)'),
             ),
             ElevatedButton(
               onPressed: onPushGetAllMovies,
               child: const Text('get all movies'),
             ),
             ElevatedButton(
+              onPressed: onPushGetAllMoviesFilter,
+              child: const Text('get all movies (genre filter)'),
+            ),
+            ElevatedButton(
               onPressed: onPushGetAllSeries,
               child: const Text('get all series'),
             ),
             ElevatedButton(
+              onPressed: onPushGetAllSeriesFilter,
+              child: const Text('get all series (genre filter)'),
+            ),
+            ElevatedButton(
               onPressed: onPushGetAllMedia,
-              child: const Text('get all media'),
+              child: const Text('get all media (text search)'),
             ),
             ElevatedButton(
                 onPressed: onPushAddMovieToUser,

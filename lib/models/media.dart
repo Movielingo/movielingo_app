@@ -6,7 +6,7 @@ abstract class Media {
   final String description;
   final String imgRef;
   final List<Genre> genres;
-  final String translationLanguage;
+  final List<String> translationLanguage;
 
   Media({
     required this.id,

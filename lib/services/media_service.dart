@@ -50,26 +50,37 @@ Future<List<Media>?> getAllMedia(
         .e('Cannot search by genre and searchTerm at the same time.');
     return null;
   }
-  QuerySnapshot snapshot;
+  List<QueryDocumentSnapshot> documentSnapshots;
   if (searchTerm != null) {
     Map<String, bool> trigrams = _generateTrigrams(searchTerm);
-    Query query = db.collection(mediaLanguage);
+    Query query = db
+        .collection(mediaLanguage)
+        .where('translationLanguage', arrayContains: translationLanguage);
     trigrams.forEach((key, value) {
       query = query.where(key, isEqualTo: value);
     });
-    snapshot = await query.get();
+    QuerySnapshot snapshot = await query.get();
+    documentSnapshots = snapshot.docs;
   } else if (genre != null) {
-    snapshot = await db
+    QuerySnapshot snapshot = await db
         .collection(mediaLanguage)
-        .where('translationLanguage', isEqualTo: translationLanguage)
         .where('genres', arrayContains: genre)
         .get();
+    documentSnapshots = snapshot.docs.where((doc) {
+      var data = doc.data() as Map<String, dynamic>?;
+      return data != null &&
+          (data['translationLanguage'] as List).contains(translationLanguage);
+    }).toList();
   } else {
-    snapshot = await db.collection(mediaLanguage).get();
+    QuerySnapshot snapshot = await db
+        .collection(mediaLanguage)
+        .where('translationLanguage', arrayContains: translationLanguage)
+        .get();
+    documentSnapshots = snapshot.docs;
   }
 
   List<Media> media = [];
-  for (var doc in snapshot.docs) {
+  for (var doc in documentSnapshots) {
     var data = doc.data() as Map<String, dynamic>;
     if (data != null) {
       try {
@@ -91,28 +102,32 @@ Future<List<Media>?> getAllMedia(
 
 Future<List<Movie>?> getAllMovies(
     String mediaLanguage, String translationLanguage,
-    [String? genre]) async {
+    [List<String>? genres]) async {
   LoggerSingleton().logger.i('Fetching all movies...');
-  QuerySnapshot querySnapshot;
-  if (genre != null) {
-    querySnapshot = await db
+  List<QueryDocumentSnapshot> documentSnapshots;
+  if (genres != null) {
+    QuerySnapshot querySnapshot = await db
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: false)
-        .where('genres', arrayContains: genre)
-        .where('translationLanguage', isEqualTo: translationLanguage)
+        .where('genres', arrayContainsAny: genres)
         .get();
+    documentSnapshots = querySnapshot.docs.where((doc) {
+      var data = doc.data() as Map<String, dynamic>?; // Cast to a Map
+      return data != null &&
+          (data['translationLanguage'] as List).contains(translationLanguage);
+    }).toList();
   } else {
-    querySnapshot = await db
+    QuerySnapshot querySnapshot = await db
         .collection(mediaLanguage)
-        .where('genres', arrayContainsAny: ['action', 'fantasy'])
         .where('isSeries', isEqualTo: false)
-        .where('translationLanguage', isEqualTo: translationLanguage)
+        .where('translationLanguage', arrayContains: translationLanguage)
         //.orderBy('genres')
         .get();
+    documentSnapshots = querySnapshot.docs;
   }
 
   try {
-    List<Movie> movies = querySnapshot.docs.map((doc) {
+    List<Movie> movies = documentSnapshots.map((doc) {
       return Movie.fromSnapshot(doc);
     }).toList();
     for (Movie movie in movies) {
@@ -125,26 +140,31 @@ Future<List<Movie>?> getAllMovies(
 
 Future<List<Series>?> getAllSeries(
     String mediaLanguage, String translationLanguage,
-    [String? genre]) async {
+    [List<String>? genre]) async {
   LoggerSingleton().logger.i('Fetching all series...');
-  QuerySnapshot querySnapshot;
+  List<DocumentSnapshot> documentSnapshots;
   if (genre != null) {
-    querySnapshot = await db
+    QuerySnapshot querySnapshot = await db
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: true)
-        .where('genres', arrayContains: genre)
-        .where('translationLanguage', isEqualTo: translationLanguage)
+        .where('genres', arrayContainsAny: genre)
         .get();
+    documentSnapshots = querySnapshot.docs.where((doc) {
+      var data = doc.data() as Map<String, dynamic>?; // Cast to a Map
+      return data != null &&
+          (data['translationLanguage'] as List).contains(translationLanguage);
+    }).toList();
   } else {
-    querySnapshot = await db
+    QuerySnapshot querySnapshot = await db
         .collection(mediaLanguage)
         .where('isSeries', isEqualTo: true)
-        .where('translationLanguage', isEqualTo: translationLanguage)
+        .where('translationLanguage', arrayContains: translationLanguage)
         .get();
+    documentSnapshots = querySnapshot.docs;
   }
 
   try {
-    List<Series> series = querySnapshot.docs.map((doc) {
+    List<Series> series = documentSnapshots.map((doc) {
       return Series.fromSnapshot(doc);
     }).toList();
     for (Series seriesItem in series) {
