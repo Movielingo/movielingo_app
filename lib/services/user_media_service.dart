@@ -1,106 +1,169 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movielingo_app/models/media.dart';
 import 'package:movielingo_app/models/movie.dart';
-import 'package:movielingo_app/models/series.dart';
+import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/models/user_episode.dart';
 import 'package:movielingo_app/models/user_movie.dart';
+import 'package:movielingo_app/models/vocabulary.dart';
 import 'package:movielingo_app/services/media_service.dart';
+import 'package:movielingo_app/services/vocabulary_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
 
-Future<void> addMediaToUser(
-    String userId, String mediaLanguage, String mediaId, int progress) async {
-  LoggerSingleton()
-      .logger
-      .i('Adding media with id $mediaId to library of user with id $userId...');
+import '../models/series.dart';
+import '../models/user_media.dart';
+import '../models/user_vocabulary.dart';
+
+// todo refactor => factory constructor in UserMovie class
+final FirebaseFirestore db = FirebaseFirestore.instance;
+UserMovie createUserMovie(
+    Movie media, String translationLanguage, String mediaLanguage) {
+  return UserMovie(
+    mediaId: media.id,
+    title: media.title,
+    progress: 0,
+    mediaLanguage: mediaLanguage,
+    translationLanguage: translationLanguage,
+    imgRef: media.imgRef,
+  );
+}
+
+// todo refactor => factory constructor in UserMovie class
+UserEpisode createUserEpisode(Media media, String translationLanguage,
+    String mediaLanguage, int episode, int season) {
+  return UserEpisode(
+    mediaId: media.id,
+    title: "${media.title} S$season E$episode",
+    progress: 0,
+    mediaLanguage: mediaLanguage,
+    translationLanguage: translationLanguage,
+    episode: episode,
+    season: season,
+    seriesTitle: media.title,
+    imgRef: media.imgRef,
+  );
+}
+
+// todo tranlsaion language must be array
+// todo vocaburlay document => how to handle multiple translation languages => for every translation language separate vocabulary document. Alternative
+// would be to include sentence tranlsation in sentences map but firestore does not create a defualt index for every key in a map, only for top level document fields
+// todo vocabulary service => series vocabulary change field from series to season
+Future<void> addEpisodeToUser(
+    MyUserData user,
+    String mediaLanguage,
+    String translationLanguage,
+    String seriesId,
+    int season,
+    int episode) async {
+  LoggerSingleton().logger.i(
+      'Adding episode with series id $seriesId to library of user with id ${user.id}...');
   try {
     var userMediaCollection =
-        db.collection('Users').doc(userId).collection('UserMedia');
-    // Check if media already exists in the user's library
+        db.collection('Users').doc(user.id).collection('UserMedia');
     var existingMedia = await userMediaCollection
-        .where('mediaId', isEqualTo: mediaId)
+        .where('mediaId', isEqualTo: seriesId)
+        .where('season', isEqualTo: season)
+        .where('episode', isEqualTo: episode)
         .limit(1)
         .get();
 
     if (existingMedia.docs.isNotEmpty) {
-      // Media already exists, log and return
       LoggerSingleton().logger.i('Media already exists in user library');
       return;
     }
 
-    Media? media = await getMediaById(mediaLanguage, mediaId);
-    var language = mediaLanguage == 'EnglishMedia' ? 'english' : 'french';
-    if (media != null) {
-      if (media is Movie) {
-        UserMovie movieUser = UserMovie(
-          mediaId: media.id,
-          title: media.title,
-          progress: progress,
-          mediaLanguage: language,
-          translationLanguage: media.translationLanguage,
-        );
-        await userMediaCollection.doc().set(movieUser.toMap());
-      } else if (media is Series) {
-        for (var episode in media.episodeDetails) {
-          UserEpisode episodeUser = UserEpisode(
-            mediaId: media.id,
-            title: episode.title,
-            episode: episode.episode,
-            season: episode.season,
-            seriesTitle: media.title,
-            progress: progress,
-            mediaLanguage: language,
-            translationLanguage: media.translationLanguage,
-          );
-          await userMediaCollection.doc().set(episodeUser.toMap());
-        }
-      } else {
-        throw Exception('Unknown media type');
-      }
-      LoggerSingleton().logger.i('Media added successfully to user library');
+    Media? series = await getMediaById(mediaLanguage, seriesId);
+    if (series == null || (series is! Series)) {
+      LoggerSingleton()
+          .logger
+          .e('No media  id: $series not found or is not a Series.');
     } else {
-      LoggerSingleton().logger.e('No media found with id: $mediaId');
+      UserEpisode userEpisode = createUserEpisode(
+          series, translationLanguage, mediaLanguage, episode, season);
+      List<Vocabulary> vocabularies = await getEpisodeVocabularies(
+          mediaLanguage,
+          translationLanguage,
+          seriesId,
+          user.level!,
+          season,
+          episode);
+
+      String newEpisodeId =
+          await userMediaCollection.add(userEpisode.toMap()).then((value) {
+        return value.id;
+      });
+      addVocabulariesToUser(vocabularies, user.id!, newEpisodeId);
+      // todo user id should be required => user.id instead of user.id!
+      LoggerSingleton().logger.i('Episode added successfully to user library');
+    }
+  } catch (e) {
+    LoggerSingleton()
+        .logger
+        .e('Error when adding episode to user media library: ', e);
+  }
+}
+
+Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
+    String translationLanguage, String movieId) async {
+  LoggerSingleton().logger.i(
+      'Adding media with id $movieId to library of user with id ${user.id}...');
+  try {
+    var userMediaCollection =
+        db.collection('Users').doc(user.id).collection('UserMedia');
+    var existingMedia = await userMediaCollection
+        .where('mediaId', isEqualTo: movieId)
+        .limit(1)
+        .get();
+
+    if (existingMedia.docs.isNotEmpty) {
+      LoggerSingleton().logger.i('Media already exists in user library');
+      return;
+    }
+
+    Media? movie = await getMediaById(mediaLanguage, movieId);
+    if (movie == null || (movie is! Movie)) {
+      LoggerSingleton()
+          .logger
+          .e('No media  id: $movieId not found or is not a Movie.');
+    } else {
+      UserMovie userMovie =
+          createUserMovie(movie, translationLanguage, mediaLanguage);
+      List<Vocabulary> vocabularies = await getMovieVocabularies(
+          mediaLanguage, translationLanguage, movieId, user.level!);
+
+      String newUserMovieId =
+          await userMediaCollection.add(userMovie.toMap()).then((value) {
+        return value.id;
+      });
+      addVocabulariesToUser(vocabularies, user.id!, newUserMovieId);
+      // todo user id should be required => user.id instead of user.id!
+      LoggerSingleton().logger.i('Movie added successfully to user library');
     }
   } catch (e) {
     LoggerSingleton().logger.e('Error when adding media to library: ', e);
   }
 }
 
-// get all media from user and return as a list of UserMovie if its movie and UserEpisode if its episode
-Future<List<dynamic>> getAllUserMedia(String userId) async {
+Future<List<UserMedia>> getUserMedia(String userId) async {
   LoggerSingleton().logger.i('Getting all media for user with id $userId...');
   try {
     var userMediaCollection =
         db.collection('Users').doc(userId).collection('UserMedia');
-    var userMedia = await userMediaCollection.get();
-    List<dynamic> mediaList = [];
-    for (var media in userMedia.docs) {
-      if (media['mediaLanguage'] == 'english') {
-        UserMovie userMovie = UserMovie(
-          mediaId: media['mediaId'],
-          title: media['title'],
-          progress: media['progress'],
-          mediaLanguage: media['mediaLanguage'],
-          translationLanguage: media['translationLanguage'],
-        );
-        mediaList.add(userMovie);
+    QuerySnapshot userMedia = await userMediaCollection.get();
+    List<UserMedia> mediaList = [];
+    for (var doc in userMedia.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+      if (data.containsKey('episode')) {
+        mediaList.add(UserEpisode.fromSnapshot(doc));
       } else {
-        UserEpisode userEpisode = UserEpisode(
-          mediaId: media['mediaId'],
-          title: media['title'],
-          episode: media['episode'],
-          season: media['season'],
-          seriesTitle: media['seriesTitle'],
-          progress: media['progress'],
-          mediaLanguage: media['mediaLanguage'],
-          translationLanguage: media['translationLanguage'],
-        );
-        mediaList.add(userEpisode);
+        mediaList.add(UserMovie.fromSnapshot(doc));
       }
     }
-    LoggerSingleton().logger.i('Media retrieved successfully');
-    print(mediaList);
+    for (UserMedia mediaItem in mediaList) {
+      LoggerSingleton().logger.i(mediaItem.title);
+    }
     return mediaList;
   } catch (e) {
-    LoggerSingleton().logger.e('Error when getting media: ', e);
+    LoggerSingleton().logger.e('Error parsing userMedia: ', e);
     return [];
   }
 }
@@ -128,4 +191,54 @@ Future<void> updateUserMediaProgress(
   } catch (e) {
     LoggerSingleton().logger.e('Error when updating media progress: ', e);
   }
+}
+
+Future<List<Vocabulary>> getDueVocabularySessionForMedia(
+    String userId, String mediaId,
+    {int sessionSize = 20}) async {
+  List<UserVocabulary> vocabularies = await db
+      .collection('Users')
+      .doc(userId)
+      .collection('Vocabularies')
+      .where('dueDate', isLessThanOrEqualTo: DateTime.now())
+      .where('userMediaId', isEqualTo: mediaId)
+      .orderBy('dueDate')
+      .limit(sessionSize)
+      .get()
+      .then((value) =>
+          value.docs.map((e) => UserVocabulary.fromSnapshot(e)).toList());
+  for (UserVocabulary vocab in vocabularies) {
+    LoggerSingleton().logger.i(vocab.wordLemma);
+  }
+  return vocabularies;
+}
+
+Future<int> getAllUserDueVocabulary(String userId) async {
+  QuerySnapshot vocabularies = await db
+      .collection('Users')
+      .doc(userId)
+      .collection('Vocabularies')
+      .where('dueDate', isLessThanOrEqualTo: DateTime.now())
+      .orderBy('dueDate')
+      .get();
+  LoggerSingleton().logger.i('Total due vocabularies: ${vocabularies.size}');
+  return vocabularies.size;
+}
+
+Future<void> updateUserVocabulary(
+    List<UserVocabulary> vocabularies, String userId) async {
+  await db.runTransaction((Transaction transaction) async {
+    for (var vocabulary in vocabularies) {
+      DocumentReference docRef = db
+          .collection('Users')
+          .doc(userId)
+          .collection('Vocabularies')
+          .doc(vocabulary.id);
+      transaction.update(docRef, vocabulary.toMap());
+    }
+  }).then((result) {
+    LoggerSingleton().logger.i('Transaction completed successfully');
+  }).catchError((error) {
+    LoggerSingleton().logger.e('Transaction failed: $error');
+  });
 }

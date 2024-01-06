@@ -16,7 +16,7 @@ class Movie extends Media {
     required String description,
     required String imgRef,
     required List<Genre> genres,
-    required String translationLanguage,
+    required List<String> translationLanguage,
     required this.director,
     required this.lengthMin,
     required this.release,
@@ -38,7 +38,10 @@ class Movie extends Media {
       imgRef: data['imgRef'],
       description: data['description'],
       genres: Genre.getGenresFromSnapshotData(data),
-      translationLanguage: data['translationLanguage'],
+      translationLanguage: data['translationLanguage']
+          .map((item) => item.toString())
+          .toList()
+          .cast<String>(),
       director: data['director'],
       lengthMin: data['lengthMin'],
       release: data['release'],

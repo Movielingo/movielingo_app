@@ -4,6 +4,7 @@ import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/screens/profile/profile.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/singletons/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
           ),
           home: const Wrapper(),
           routes: {
-            '/profile': (context) => Profile(),
+            '/profile': (context) => const Profile(),
           }),
     );
   }
@@ -50,8 +51,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void on_button_push() {
-    print('button push');
+  void onButtonPush() {
+    LoggerSingleton().logger.i('button push');
   }
 
   @override
@@ -66,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-                onPressed: on_button_push, child: const Text('get all movies'))
+                onPressed: onButtonPush, child: const Text('get all movies'))
           ],
         ),
       ),

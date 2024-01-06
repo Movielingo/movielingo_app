@@ -1,34 +1,52 @@
-class UserEpisode {
-  final String mediaId;
-  final String title;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:movielingo_app/models/user_media.dart';
+
+class UserEpisode extends UserMedia {
   final int episode;
   final int season;
   final String seriesTitle;
-  final int progress;
-  final String mediaLanguage;
-  final String translationLanguage;
 
   UserEpisode({
-    required this.mediaId,
-    required this.title,
+    required String mediaId,
+    required String title,
+    required int progress,
+    required String translationLanguage,
+    required String mediaLanguage,
+    required String imgRef,
     required this.episode,
     required this.season,
     required this.seriesTitle,
-    required this.progress,
-    required this.mediaLanguage,
-    required this.translationLanguage,
-  });
+  }) : super(
+          mediaId: mediaId,
+          title: title,
+          progress: progress,
+          translationLanguage: translationLanguage,
+          mediaLanguage: mediaLanguage,
+          imgRef: imgRef,
+        );
 
+  @override
   Map<String, dynamic> toMap() {
     return {
-      'mediaId': mediaId,
-      'title': title,
+      ...super.toMap(),
       'episode': episode,
       'season': season,
       'seriesTitle': seriesTitle,
-      'progress': progress,
-      'mediaLanguage': mediaLanguage,
-      'translationLanguage': translationLanguage,
     };
+  }
+
+  factory UserEpisode.fromSnapshot(DocumentSnapshot snapshot) {
+    var data = snapshot.data() as Map<String, dynamic>;
+    return UserEpisode(
+      mediaId: data['mediaId'],
+      title: data['title'],
+      imgRef: data['imgRef'],
+      progress: data['progress'],
+      mediaLanguage: data['mediaLanguage'],
+      translationLanguage: data['translationLanguage'],
+      episode: data['episode'],
+      season: data['season'],
+      seriesTitle: data['seriesTitle'],
+    );
   }
 }

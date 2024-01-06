@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:movielingo_app/models/enums.dart';
 import 'package:movielingo_app/models/myuser.dart';
 
 class UserService {
@@ -11,21 +12,21 @@ class UserService {
     return await _usersCollection.doc(userId).set({
       'username': username,
       'email': email,
-      'motherTongue': motherTongue,
-      'language': language,
-      'level': level,
+      'motherTongue': motherTongue.toLowerCase(),
+      'language': language.toLowerCase(),
+      'level': level.toLowerCase(),
     });
   }
 
   Future<MyUserData> getUser(String uid) async {
     DocumentSnapshot doc = await _usersCollection.doc(uid).get();
     return MyUserData(
-      uid: doc.id,
+      id: doc.id,
       username: doc['username'],
       email: doc['email'],
       motherTongue: doc['motherTongue'],
       language: doc['language'],
-      level: doc['level'],
+      level: CSRFLevel.values.firstWhere((e) => e.name == doc['level']),
     );
   }
 

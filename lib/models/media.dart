@@ -1,12 +1,12 @@
 import 'enums.dart';
 
-class Media {
+abstract class Media {
   final String id;
   final String title;
   final String description;
   final String imgRef;
   final List<Genre> genres;
-  final String translationLanguage;
+  final List<String> translationLanguage;
 
   Media({
     required this.id,
