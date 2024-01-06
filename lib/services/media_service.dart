@@ -26,6 +26,7 @@ Future<Media?> getMediaById(String mediaLanguage, String id) async {
       return series;
     }
   }
+  return null;
 }
 
 Map<String, bool> _generateTrigrams(String text) {
@@ -136,6 +137,7 @@ Future<List<Movie>?> getAllMovies(
   } catch (e) {
     LoggerSingleton().logger.e('Error when fetching all movies: ', e);
   }
+  return null;
 }
 
 Future<List<Series>?> getAllSeries(
@@ -173,4 +175,5 @@ Future<List<Series>?> getAllSeries(
   } catch (e) {
     LoggerSingleton().logger.e('Error when fetching all series: ', e);
   }
+  return null;
 }
