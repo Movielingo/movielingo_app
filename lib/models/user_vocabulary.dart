@@ -62,6 +62,7 @@ class UserVocabulary extends Vocabulary {
       userMediaId: mediaId,
     );
   }
+  @override
   Map<String, dynamic> toMap() {
     return {
       'lemma': wordLemma,
