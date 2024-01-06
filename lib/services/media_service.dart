@@ -83,16 +83,14 @@ Future<List<Media>?> getAllMedia(
   List<Media> media = [];
   for (var doc in documentSnapshots) {
     var data = doc.data() as Map<String, dynamic>;
-    if (data != null) {
-      try {
-        if (data['isSeries'] == true) {
-          media.add(Series.fromSnapshot(doc));
-        } else {
-          media.add(Movie.fromSnapshot(doc));
-        }
-      } catch (e) {
-        LoggerSingleton().logger.e('Error parsing media item: ', e);
+    try {
+      if (data['isSeries'] == true) {
+        media.add(Series.fromSnapshot(doc));
+      } else {
+        media.add(Movie.fromSnapshot(doc));
       }
+    } catch (e) {
+      LoggerSingleton().logger.e('Error parsing media item: ', e);
     }
   }
   for (Media mediaItem in media) {

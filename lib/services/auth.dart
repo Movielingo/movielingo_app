@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
+import 'package:movielingo_app/singletons/logger.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,7 +31,7 @@ class AuthService {
       User? user = result.user;
       return _userfromFirebase(user!);
     } catch (e) {
-      print(e.toString());
+      LoggerSingleton().logger.e(e.toString());
       return null;
     }
   }
@@ -43,7 +44,7 @@ class AuthService {
       User? user = result.user;
       return _userfromFirebase(user!);
     } catch (e) {
-      print(e.toString());
+      LoggerSingleton().logger.e(e.toString());
       return null;
     }
   }
@@ -67,7 +68,7 @@ class AuthService {
 
       return _userfromFirebase(user);
     } catch (e) {
-      print(e.toString());
+      LoggerSingleton().logger.e(e.toString());
       return null;
     }
   }
@@ -77,7 +78,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e.toString());
+      LoggerSingleton().logger.e(e.toString());
       return null;
     }
   }
