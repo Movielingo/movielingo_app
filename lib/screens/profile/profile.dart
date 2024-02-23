@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
+import 'package:movielingo_app/models/enums.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -28,7 +29,7 @@ class _ProfileState extends State<Profile> {
     username = '';
     motherTongue = '';
     language = '';
-    level = '';
+    level = CSRFLevel.values.first.name;
     error = '';
     _loadInitialData();
   }
@@ -40,7 +41,7 @@ class _ProfileState extends State<Profile> {
       username = data.username;
       motherTongue = data.motherTongue;
       language = data.language;
-      // todo level = data.level ?? '';
+      level = data.level.name;
     });
   }
 
