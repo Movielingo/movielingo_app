@@ -34,9 +34,9 @@ class UserService {
       String language, String level) async {
     return _usersCollection.doc(userId).update({
       'username': username,
-      'motherTongue': motherTongue,
-      'language': language,
-      'level': level,
+      'motherTongue': motherTongue.toLowerCase(),
+      'language': language.toLowerCase(),
+      'level': level.toLowerCase(),
     });
   }
 
