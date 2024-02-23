@@ -4,7 +4,7 @@ import 'package:movielingo_app/services/auth.dart';
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
-  const SignIn({Key? key, required this.toggleView}) : super(key: key);
+  const SignIn({super.key, required this.toggleView});
 
   @override
   State<SignIn> createState() => _SignInState();

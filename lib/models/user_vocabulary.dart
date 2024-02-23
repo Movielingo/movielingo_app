@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movielingo_app/models/sentence.dart';
 import 'package:movielingo_app/models/vocabulary.dart';

@@ -97,7 +97,7 @@ Future<void> addEpisodeToUser(
   } catch (e) {
     LoggerSingleton()
         .logger
-        .e('Error when adding episode to user media library: ', e);
+        .e('Error when adding episode to user media library: ', error: e);
   }
 }
 
@@ -137,7 +137,9 @@ Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
       LoggerSingleton().logger.i('Movie added successfully to user library');
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when adding media to library: ', e);
+    LoggerSingleton()
+        .logger
+        .e('Error when adding media to library: ', error: e);
   }
 }
 
@@ -161,7 +163,7 @@ Future<List<UserMedia>> getUserMedia(String userId) async {
     }
     return mediaList;
   } catch (e) {
-    LoggerSingleton().logger.e('Error parsing userMedia: ', e);
+    LoggerSingleton().logger.e('Error parsing userMedia: ', error: e);
     return [];
   }
 }
@@ -187,7 +189,9 @@ Future<void> updateUserMediaProgress(
       LoggerSingleton().logger.e('No media found with id: $mediaId');
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when updating media progress: ', e);
+    LoggerSingleton()
+        .logger
+        .e('Error when updating media progress: ', error: e);
   }
 }
 

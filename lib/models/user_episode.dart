@@ -7,23 +7,16 @@ class UserEpisode extends UserMedia {
   final String seriesTitle;
 
   UserEpisode({
-    required String mediaId,
-    required String title,
-    required int progress,
-    required String translationLanguage,
-    required String mediaLanguage,
-    required String imgRef,
+    required super.mediaId,
+    required super.title,
+    required super.progress,
+    required super.translationLanguage,
+    required super.mediaLanguage,
+    required super.imgRef,
     required this.episode,
     required this.season,
     required this.seriesTitle,
-  }) : super(
-          mediaId: mediaId,
-          title: title,
-          progress: progress,
-          translationLanguage: translationLanguage,
-          mediaLanguage: mediaLanguage,
-          imgRef: imgRef,
-        );
+  });
 
   @override
   Map<String, dynamic> toMap() {

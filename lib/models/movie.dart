@@ -11,24 +11,17 @@ class Movie extends Media {
   final CSRFVocabCounts vocabCounts;
 
   Movie({
-    required String id,
-    required String title,
-    required String description,
-    required String imgRef,
-    required List<Genre> genres,
-    required List<String> translationLanguage,
+    required super.id,
+    required super.title,
+    required super.description,
+    required super.imgRef,
+    required super.genres,
+    required super.translationLanguage,
     required this.director,
     required this.lengthMin,
     required this.release,
     required this.vocabCounts,
-  }) : super(
-          id: id,
-          title: title,
-          description: description,
-          imgRef: imgRef,
-          genres: genres,
-          translationLanguage: translationLanguage,
-        );
+  });
 
   factory Movie.fromSnapshot(DocumentSnapshot snapshot) {
     var data = snapshot.data() as Map<String, dynamic>;
