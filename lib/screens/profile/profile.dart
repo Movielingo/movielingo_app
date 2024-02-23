@@ -33,14 +33,13 @@ class _ProfileState extends State<Profile> {
     _loadInitialData();
   }
 
-// todo why is everything nullable?
   void _loadInitialData() async {
-    String userId = _auth.currentUser?.uid ?? '';
+    String userId = _auth.currentUser!.uid;
     MyUserData? data = await _user.getUser(userId);
     setState(() {
-      username = data.username ?? '';
-      motherTongue = data.motherTongue ?? '';
-      language = data.language ?? '';
+      username = data.username;
+      motherTongue = data.motherTongue;
+      language = data.language;
       // todo level = data.level ?? '';
     });
   }
