@@ -45,3 +45,11 @@ If you're new to Flutter, these resources will help you hit the ground running:
    ```
    flutter run
    ```
+
+## ⚙️ Tests
+
+Run all Unit Tests:
+
+```
+flutter test
+```

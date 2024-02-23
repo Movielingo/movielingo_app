@@ -83,7 +83,7 @@ Future<void> addEpisodeToUser(
           mediaLanguage,
           translationLanguage,
           seriesId,
-          user.level!,
+          user.level,
           season,
           episode);
 
@@ -91,14 +91,13 @@ Future<void> addEpisodeToUser(
           await userMediaCollection.add(userEpisode.toMap()).then((value) {
         return value.id;
       });
-      addVocabulariesToUser(vocabularies, user.id!, newEpisodeId);
-      // todo user id should be required => user.id instead of user.id!
+      addVocabulariesToUser(vocabularies, user.id, newEpisodeId);
       LoggerSingleton().logger.i('Episode added successfully to user library');
     }
   } catch (e) {
     LoggerSingleton()
         .logger
-        .e('Error when adding episode to user media library: ', e);
+        .e('Error when adding episode to user media library: ', error: e);
   }
 }
 
@@ -128,18 +127,19 @@ Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
       UserMovie userMovie =
           createUserMovie(movie, translationLanguage, mediaLanguage);
       List<Vocabulary> vocabularies = await getMovieVocabularies(
-          mediaLanguage, translationLanguage, movieId, user.level!);
+          mediaLanguage, translationLanguage, movieId, user.level);
 
       String newUserMovieId =
           await userMediaCollection.add(userMovie.toMap()).then((value) {
         return value.id;
       });
-      addVocabulariesToUser(vocabularies, user.id!, newUserMovieId);
-      // todo user id should be required => user.id instead of user.id!
+      addVocabulariesToUser(vocabularies, user.id, newUserMovieId);
       LoggerSingleton().logger.i('Movie added successfully to user library');
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when adding media to library: ', e);
+    LoggerSingleton()
+        .logger
+        .e('Error when adding media to library: ', error: e);
   }
 }
 
@@ -163,7 +163,7 @@ Future<List<UserMedia>> getUserMedia(String userId) async {
     }
     return mediaList;
   } catch (e) {
-    LoggerSingleton().logger.e('Error parsing userMedia: ', e);
+    LoggerSingleton().logger.e('Error parsing userMedia: ', error: e);
     return [];
   }
 }
@@ -189,7 +189,9 @@ Future<void> updateUserMediaProgress(
       LoggerSingleton().logger.e('No media found with id: $mediaId');
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when updating media progress: ', e);
+    LoggerSingleton()
+        .logger
+        .e('Error when updating media progress: ', error: e);
   }
 }
 

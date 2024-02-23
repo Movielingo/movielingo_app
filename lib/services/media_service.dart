@@ -90,7 +90,7 @@ Future<List<Media>?> getAllMedia(
         media.add(Movie.fromSnapshot(doc));
       }
     } catch (e) {
-      LoggerSingleton().logger.e('Error parsing media item: ', e);
+      LoggerSingleton().logger.e('Error parsing media item: ', error: e);
     }
   }
   for (Media mediaItem in media) {
@@ -133,7 +133,7 @@ Future<List<Movie>?> getAllMovies(
       LoggerSingleton().logger.i(movie.title);
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when fetching all movies: ', e);
+    LoggerSingleton().logger.e('Error when fetching all movies: ', error: e);
   }
   return null;
 }
@@ -171,7 +171,7 @@ Future<List<Series>?> getAllSeries(
       LoggerSingleton().logger.i(seriesItem.title);
     }
   } catch (e) {
-    LoggerSingleton().logger.e('Error when fetching all series: ', e);
+    LoggerSingleton().logger.e('Error when fetching all series: ', error: e);
   }
   return null;
 }
