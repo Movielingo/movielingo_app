@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
+import 'package:movielingo_app/screens/endpoints/endpoints.dart';
 import 'package:movielingo_app/screens/profile/profile.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/services/auth.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           home: const Wrapper(),
           routes: {
             '/profile': (context) => const Profile(),
+            '/endpoints': (context) => Endpoints(),
           }),
     );
   }
