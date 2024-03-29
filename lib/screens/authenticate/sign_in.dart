@@ -22,9 +22,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-          backgroundColor: Colors.greenAccent[400],
           elevation: 0.0,
           title: const Text('Sign In to MovieLingo'),
           actions: <Widget>[
@@ -73,7 +71,7 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 20.0),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent[400],
+                    backgroundColor: Colors.cyan[400],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(0),
                     ),

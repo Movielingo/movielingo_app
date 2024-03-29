@@ -68,11 +68,18 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.greenAccent[400],
         elevation: 0.0,
+        actions: <Widget>[
+          TextButton.icon(
+            icon: const Icon(Icons.logout),
+            label: const Text('Sign Out'),
+            onPressed: () async {
+              await _auth.signOut();
+            },
+          ),
+        ],
       ),
       body: isLoading
           ? const Center(

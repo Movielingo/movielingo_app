@@ -1,156 +1,55 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:movielingo_app/models/myuser.dart';
-import 'package:movielingo_app/services/auth.dart';
-import 'package:movielingo_app/services/user_media_service.dart';
+import 'package:movielingo_app/screens/profile/profile.dart';
+import 'package:movielingo_app/screens/endpoints/endpoints.dart';
 
-import '../../services/media_service.dart';
-import '../../services/user_service.dart';
+class Home extends StatefulWidget {
+  const Home({super.key});
 
-class Home extends StatelessWidget {
-  Home({super.key});
+  @override
+  State<Home> createState() => _HomeState();
+}
 
-  final AuthService _auth = AuthService();
-  final FirebaseAuth _user = FirebaseAuth.instance;
-  final UserService userService = UserService();
-  void onPushGetMovieById() {
-    getMediaById('EnglishMedia', '1gYTGxdrTZHjqgxjunP1');
-  }
-
-  void onPushGetSeriesById() {
-    getMediaById('EnglishMedia', 'evu4OehE2E4U7vHEW7cP');
-  }
-
-  void onPushGetAllMovies() {
-    getAllMovies('EnglishMedia', 'german');
-  }
-
-  void onPushGetAllMoviesFilter() {
-    getAllMovies('EnglishMedia', 'german', ['fantasy']);
-  }
-
-  void onPushGetAllSeries() {
-    getAllSeries('EnglishMedia', 'german');
-  }
-
-  void onPushGetAllSeriesFilter() {
-    getAllSeries('EnglishMedia', 'german', ['comedy']);
-  }
-
-  void onPushGetAllMedia() {
-    getAllMedia('EnglishMedia', 'german', null, 'harry potter');
-  }
-
-  void onPushGetDueVocabularySessionForMedia() {
-    String userId = _user.currentUser?.uid ?? '';
-    getDueVocabularySessionForMedia(userId, 'gNusm32GAmpaVpUWab3m');
-  }
-
-  Future<void> onPushAddMovieToUser() async {
-    String userId = _user.currentUser?.uid ?? '';
-    MyUserData user = await userService.getUser(userId);
-    addMovieToUser(user, 'EnglishMedia', 'german', '1gYTGxdrTZHjqgxjunP1');
-  }
-
-  Future<void> onPushAddEpisodeToUser() async {
-    String userId = _user.currentUser?.uid ?? '';
-    MyUserData user = await userService.getUser(userId);
-    addEpisodeToUser(
-        user, 'EnglishMedia', 'german', 'evu4OehE2E4U7vHEW7cP', 1, 1);
-  }
-
-  void onPushGetUserMedia() {
-    String userId = _user.currentUser?.uid ?? '';
-    getUserMedia(userId);
-  }
-
-  void onPushGetAllUserDueVocabulary() {
-    String userId = _user.currentUser?.uid ?? '';
-    getAllUserDueVocabulary(userId);
-  }
-
-  void onPushUpdateUserMediaProgress() {
-    String userId = _user.currentUser?.uid ?? '';
-    updateUserMediaProgress(userId, 'TOg24pwrOHGHb9vkAzXB', 50);
-  }
+class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    // Screens corresponding to the navigation bar items
+    final List<Widget> screens = [
+      const Center(child: Text('Welcome to Movielingo')), // Home screen
+      const Profile(), // Profile screen
+      Endpoints(), // Endpoints screen
+      // Add more screens as needed
+    ];
+
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('MovieLingo'),
-        backgroundColor: Colors.greenAccent[400],
-        elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.settings),
-            label: const Text('Profile'),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('Logout'),
-            onPressed: () async {
-              await _auth.signOut();
-            },
-          ),
-        ],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: screens,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: onPushGetMovieById,
-              child: const Text('get media by id (movie)'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetSeriesById,
-              child: const Text('get media by id (series)'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetAllMovies,
-              child: const Text('get all movies'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetAllMoviesFilter,
-              child: const Text('get all movies (genre filter)'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetAllSeries,
-              child: const Text('get all series'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetAllSeriesFilter,
-              child: const Text('get all series (genre filter)'),
-            ),
-            ElevatedButton(
-              onPressed: onPushGetAllMedia,
-              child: const Text('get all media (text search)'),
-            ),
-            ElevatedButton(
-                onPressed: onPushAddMovieToUser,
-                child: const Text('add Movie to User')),
-            ElevatedButton(
-                onPressed: onPushAddEpisodeToUser,
-                child: const Text('add Episode to User')),
-            ElevatedButton(
-                onPressed: onPushGetUserMedia,
-                child: const Text('get User Media')),
-            ElevatedButton(
-                onPressed: onPushGetDueVocabularySessionForMedia,
-                child: const Text('get due vocabulary session for user media')),
-            ElevatedButton(
-                onPressed: onPushGetAllUserDueVocabulary,
-                child: const Text('get all user due vocabulary')),
-            ElevatedButton(
-                onPressed: onPushUpdateUserMediaProgress,
-                child: const Text('update User Media Progress to 50')),
-          ],
-        ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        destinations: const <Widget>[
+          NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home'),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outlined),
+              label: 'Profile'),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.settings),
+              icon: Icon(Icons.settings_outlined),
+              label: 'Endpoints'),
+          // Add more destinations as needed
+        ],
       ),
     );
   }
