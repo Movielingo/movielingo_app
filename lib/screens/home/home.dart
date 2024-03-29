@@ -16,8 +16,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     // Screens corresponding to the navigation bar items
     final List<Widget> screens = [
-      const Center(
-          child: Text('Welcome to Movielingo')), // Home screen placeholder
+      const Center(child: Text('Welcome to Movielingo')), // Home screen
       const Profile(), // Profile screen
       Endpoints(), // Endpoints screen
       // Add more screens as needed
@@ -35,7 +34,6 @@ class _HomeState extends State<Home> {
           setState(() {
             _selectedIndex = index;
           });
-          // Example logout action on selecting a specific index, say the last index
         },
         destinations: const <Widget>[
           NavigationDestination(
