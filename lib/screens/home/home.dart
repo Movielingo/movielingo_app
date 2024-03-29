@@ -1,54 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:movielingo_app/services/auth.dart';
-import '../../services/user_service.dart';
+import 'package:movielingo_app/screens/profile/profile.dart';
+import 'package:movielingo_app/screens/endpoints/endpoints.dart';
 
-class Home extends StatelessWidget {
-  Home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
-  final AuthService _auth = AuthService();
-  final UserService userService = UserService();
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    // Screens corresponding to the navigation bar items
+    final List<Widget> screens = [
+      const Center(
+          child: Text('Welcome to Movielingo')), // Home screen placeholder
+      const Profile(), // Profile screen
+      Endpoints(), // Endpoints screen
+      // Add more screens as needed
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MovieLingo'),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        elevation: 0.5,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('Profile'),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.settings),
-            label: const Text('Endpoints'),
-            onPressed: () {
-              Navigator.pushNamed(context, '/endpoints');
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.logout),
-            label: const Text('Logout'),
-            onPressed: () async {
-              await _auth.signOut();
-            },
-          ),
-        ],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: screens,
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Welcome to MovieLingo',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          // Example logout action on selecting a specific index, say the last index
+        },
+        destinations: const <Widget>[
+          NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home'),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outlined),
+              label: 'Profile'),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.settings),
+              icon: Icon(Icons.settings_outlined),
+              label: 'Endpoints'),
+          // Add more destinations as needed
+        ],
       ),
     );
   }

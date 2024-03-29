@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
-import 'package:movielingo_app/services/auth.dart';
 import 'package:movielingo_app/services/user_media_service.dart';
 
 import '../../services/media_service.dart';
@@ -10,7 +9,6 @@ import '../../services/user_service.dart';
 class Endpoints extends StatelessWidget {
   Endpoints({super.key});
 
-  final AuthService _auth = AuthService();
   final FirebaseAuth _user = FirebaseAuth.instance;
   final UserService userService = UserService();
   void onPushGetMovieById() {
@@ -78,24 +76,8 @@ class Endpoints extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MovieLingo'),
+        title: const Text('Endpoints'),
         elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('Profile'),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.logout),
-            label: const Text('Logout'),
-            onPressed: () async {
-              await _auth.signOut();
-            },
-          ),
-        ],
       ),
       body: Center(
         child: Column(
