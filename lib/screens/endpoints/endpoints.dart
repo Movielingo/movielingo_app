@@ -77,10 +77,8 @@ class Endpoints extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('MovieLingo'),
-        backgroundColor: Colors.greenAccent[400],
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(

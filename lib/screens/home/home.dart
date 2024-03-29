@@ -13,7 +13,6 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('MovieLingo'),
-        backgroundColor: Colors.greenAccent[400],
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
