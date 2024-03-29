@@ -6,6 +6,7 @@ import 'package:movielingo_app/screens/profile/profile.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import 'firebase_options.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider<MyUser?>.value(
       initialData: null,
       value: AuthService().user,
-      child: MaterialApp(
+      child: MaterialApp.router(
           title: 'MovieLingo',
           theme: ThemeData(
             useMaterial3: true,
@@ -36,11 +37,25 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.dark,
             ),
           ),
-          home: const Wrapper(),
-          routes: {
-            '/profile': (context) => const Profile(),
-            '/endpoints': (context) => Endpoints(),
-          }),
+          routerConfig: _router),
     );
   }
 }
+
+// Define the GoRouter
+final GoRouter _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const Wrapper(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const Profile(),
+    ),
+    GoRoute(
+      path: '/endpoints',
+      builder: (context, state) => Endpoints(),
+    ),
+  ],
+);
