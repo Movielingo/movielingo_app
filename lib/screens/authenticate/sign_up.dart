@@ -87,19 +87,26 @@ class _SignUpState extends State<SignUp> {
               ),
               const SizedBox(height: 20.0),
               const SizedBox(height: 20.0),
-              TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Your Mother Tongue*',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  validator: (val) =>
-                      val!.isEmpty ? 'Enter your mother tongue' : null,
-                  style: const TextStyle(color: Colors.black),
-                  onChanged: (val) {
-                    setState(() => motherTongue = val);
-                  }),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  hintText: 'Your Mother Tongue*',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                value: motherTongue.isEmpty ? null : motherTongue,
+                onChanged: (val) => setState(() => motherTongue = val ?? ''),
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Select your mother tongue'
+                    : null,
+                items: ValidationUtils.motherTongues
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
               const SizedBox(height: 20.0),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(

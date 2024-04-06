@@ -15,4 +15,37 @@ class ValidationUtils {
     }
     return null;
   }
+
+  static const List<String> motherTongues = [
+    'English',
+    'Mandarin Chinese',
+    'Hindi',
+    'Spanish',
+    'French',
+    'Standard Arabic',
+    'Bengali',
+    'Russian',
+    'Portuguese',
+    'Urdu',
+    'Indonesian',
+    'German',
+    'Japanese',
+    'Swahili',
+    'Marathi',
+    'Telugu',
+    'Turkish',
+    'Tamil',
+    'Vietnamese',
+    'Italian',
+    'Egyptian Arabic',
+    'Hausa',
+    'Thai',
+    'Korean',
+    'Persian',
+    'Gujarati',
+    'Philippine Filipino',
+    'Punjabi',
+    'Polish',
+    'Ukrainian'
+  ];
 }

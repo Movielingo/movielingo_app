@@ -5,6 +5,7 @@ import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
 import 'package:movielingo_app/models/enums.dart';
 import 'package:movielingo_app/utils/string_utils.dart';
+import 'package:movielingo_app/utils/validation_utils.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -123,13 +124,22 @@ class _ProfileState extends State<Profile> {
                                       ? 'Username cannot be empty'
                                       : null,
                                 ),
-                                TextFormField(
-                                  initialValue: motherTongue,
+                                DropdownButtonFormField<String>(
                                   decoration: const InputDecoration(
                                       labelText: 'Mother Tongue'),
-                                  onChanged: (val) {
-                                    setState(() => motherTongue = val);
-                                  },
+                                  value: motherTongue.isNotEmpty
+                                      ? motherTongue
+                                      : null,
+                                  onChanged: (val) =>
+                                      setState(() => motherTongue = val!),
+                                  items: ValidationUtils.motherTongues
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
                                 DropdownButtonFormField<String>(
                                   decoration: const InputDecoration(
