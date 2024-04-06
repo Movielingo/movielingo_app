@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/utils/validation_utils.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleView;
@@ -77,8 +78,7 @@ class _SignUpState extends State<SignUp> {
                   fillColor: Colors.white,
                   filled: true,
                 ),
-                validator: (val) =>
-                    val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                validator: (val) => ValidationUtils.validatePassword(val),
                 style: const TextStyle(color: Colors.black),
                 obscureText: true,
                 onChanged: (val) {
@@ -156,15 +156,12 @@ class _SignUpState extends State<SignUp> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.registerWithEmailAndPassword(
-                          username,
-                          email,
-                          password,
-                          motherTongue,
-                          language,
-                          level);
-                      if (result == null) {
-                        setState(() => error = 'Please supply a valid email');
+                      AuthResult result =
+                          await _auth.registerWithEmailAndPassword(username,
+                              email, password, motherTongue, language, level);
+                      if (result.user == null) {
+                        setState(() => error = result.errorMessage ??
+                            'An unexpected error occurred.');
                       }
                     }
                   },

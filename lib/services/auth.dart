@@ -3,6 +3,14 @@ import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
 
+// Define a custom result type
+class AuthResult {
+  final MyUser? user;
+  final String? errorMessage;
+
+  AuthResult({this.user, this.errorMessage});
+}
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static final AuthService _singleton = AuthService._internal();
@@ -50,7 +58,7 @@ class AuthService {
   }
 
   // register with email & password
-  Future registerWithEmailAndPassword(
+  Future<AuthResult> registerWithEmailAndPassword(
       String name,
       String email,
       String password,
@@ -66,10 +74,22 @@ class AuthService {
       await UserService()
           .addUser(user!.uid, name, user.email!, motherTongue, language, level);
 
-      return _userfromFirebase(user);
+      return AuthResult(user: _userfromFirebase(user));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        LoggerSingleton().logger.e('The password provided is too weak.');
+        return AuthResult(errorMessage: 'The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        LoggerSingleton()
+            .logger
+            .e('The account already exists for that email.');
+        return AuthResult(
+            errorMessage: 'The account already exists for that email.');
+      }
+      return AuthResult(errorMessage: e.message);
     } catch (e) {
       LoggerSingleton().logger.e(e.toString());
-      return null;
+      return AuthResult(errorMessage: 'An unexpected error occurred.');
     }
   }
 
