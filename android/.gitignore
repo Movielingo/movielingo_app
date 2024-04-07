@@ -13,4 +13,4 @@ key.properties
 **/*.jks
 
 # Ignore app/google-services.json for Firebase
-app/google-services.json
+*/google-services.json
