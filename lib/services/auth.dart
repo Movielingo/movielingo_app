@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 // Define a custom result type
 class AuthResult {
