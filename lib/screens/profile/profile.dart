@@ -19,7 +19,6 @@ class _ProfileState extends State<Profile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // text field state
-  late String username;
   late String motherTongue;
   late String language;
   late String level;
@@ -30,7 +29,6 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    username = '';
     motherTongue = '';
     language = '';
     level = CSRFLevel.values.first.name;
@@ -42,10 +40,9 @@ class _ProfileState extends State<Profile> {
     String userId = _auth.currentUser!.uid;
     MyUserData? data = await _user.getUser(userId);
     setState(() {
-      username = data.username;
-      motherTongue = capitalizeFirstLetter(data.motherTongue);
-      language = capitalizeFirstLetter(data.language);
-      level = capitalizeFirstLetter(data.level.name);
+      motherTongue = capitalizeFirstLetter(data.motherTongue!);
+      language = capitalizeFirstLetter(data.language!);
+      level = capitalizeFirstLetter(data.level!.name);
       isLoading = false;
     });
   }
@@ -91,9 +88,6 @@ class _ProfileState extends State<Profile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Username: $username',
-                      style:
-                          const TextStyle(fontSize: 16, color: Colors.white)),
                   Text('Mother Tongue: $motherTongue',
                       style:
                           const TextStyle(fontSize: 16, color: Colors.white)),
@@ -113,17 +107,6 @@ class _ProfileState extends State<Profile> {
                           return Form(
                             child: Column(
                               children: <Widget>[
-                                TextFormField(
-                                  initialValue: username,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Username'),
-                                  onChanged: (val) {
-                                    setState(() => username = val);
-                                  },
-                                  validator: (val) => val!.isEmpty
-                                      ? 'Username cannot be empty'
-                                      : null,
-                                ),
                                 DropdownButtonFormField<String>(
                                   decoration: const InputDecoration(
                                       labelText: 'Mother Tongue'),
@@ -191,7 +174,6 @@ class _ProfileState extends State<Profile> {
                                     String userId = _auth.currentUser!.uid;
                                     await _user.updateUser(
                                       userId,
-                                      username,
                                       motherTongue,
                                       language,
                                       level,

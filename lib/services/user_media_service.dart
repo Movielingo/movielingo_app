@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:movielingo_app/models/enums.dart';
 import 'package:movielingo_app/models/media.dart';
 import 'package:movielingo_app/models/movie.dart';
 import 'package:movielingo_app/models/myuser.dart';
@@ -83,7 +84,7 @@ Future<void> addEpisodeToUser(
           mediaLanguage,
           translationLanguage,
           seriesId,
-          user.level,
+          user.level ?? CSRFLevel.a1,
           season,
           episode);
 
@@ -126,8 +127,8 @@ Future<void> addMovieToUser(MyUserData user, String mediaLanguage,
     } else {
       UserMovie userMovie =
           createUserMovie(movie, translationLanguage, mediaLanguage);
-      List<Vocabulary> vocabularies = await getMovieVocabularies(
-          mediaLanguage, translationLanguage, movieId, user.level);
+      List<Vocabulary> vocabularies = await getMovieVocabularies(mediaLanguage,
+          translationLanguage, movieId, user.level ?? CSRFLevel.a1);
 
       String newUserMovieId =
           await userMediaCollection.add(userMovie.toMap()).then((value) {

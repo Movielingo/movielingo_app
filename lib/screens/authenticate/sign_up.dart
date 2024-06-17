@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
@@ -16,7 +17,6 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
   // text field state
-  String username = '';
   String email = '';
   String password = '';
   String motherTongue = '';
@@ -44,19 +44,6 @@ class _SignUpState extends State<SignUp> {
           child: Form(
             key: _formKey,
             child: Column(children: <Widget>[
-              const SizedBox(height: 20.0),
-              TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Username*',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    fillColor: Colors.white,
-                    filled: true,
-                  ),
-                  validator: (val) => val!.isEmpty ? 'Enter a Username' : null,
-                  style: const TextStyle(color: Colors.black),
-                  onChanged: (val) {
-                    setState(() => username = val);
-                  }),
               const SizedBox(height: 20.0),
               TextFormField(
                   decoration: const InputDecoration(
@@ -164,7 +151,7 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       AuthResult result =
-                          await _auth.registerWithEmailAndPassword(username,
+                          await _auth.registerWithEmailAndPassword(
                               email, password, motherTongue, language, level);
                       if (result.user == null) {
                         setState(() => error = result.errorMessage ??

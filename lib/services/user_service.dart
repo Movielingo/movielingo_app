@@ -7,10 +7,9 @@ class UserService {
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('Users');
 
-  Future<void> addUser(String userId, String username, String email,
-      String motherTongue, String language, String level) async {
+  Future<void> addUser(String userId, String email, String motherTongue,
+      String language, String level) async {
     return await _usersCollection.doc(userId).set({
-      'username': username,
       'email': email,
       'motherTongue': motherTongue.toLowerCase(),
       'language': language.toLowerCase(),
@@ -22,7 +21,6 @@ class UserService {
     DocumentSnapshot doc = await _usersCollection.doc(uid).get();
     return MyUserData(
       id: doc.id,
-      username: doc['username'],
       email: doc['email'],
       motherTongue: doc['motherTongue'],
       language: doc['language'],
@@ -30,10 +28,9 @@ class UserService {
     );
   }
 
-  Future<void> updateUser(String userId, String username, String motherTongue,
-      String language, String level) async {
+  Future<void> updateUser(
+      String userId, String motherTongue, String language, String level) async {
     return _usersCollection.doc(userId).update({
-      'username': username,
       'motherTongue': motherTongue.toLowerCase(),
       'language': language.toLowerCase(),
       'level': level.toLowerCase(),

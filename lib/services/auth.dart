@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // Define a custom result type
 class AuthResult {
@@ -58,13 +59,8 @@ class AuthService {
   }
 
   // register with email & password
-  Future<AuthResult> registerWithEmailAndPassword(
-      String name,
-      String email,
-      String password,
-      String motherTongue,
-      String language,
-      String level) async {
+  Future<AuthResult> registerWithEmailAndPassword(String email, String password,
+      String motherTongue, String language, String level) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email.trim(), password: password.trim());
@@ -72,7 +68,7 @@ class AuthService {
 
       // create a new document for the user with the uid
       await UserService()
-          .addUser(user!.uid, name, user.email!, motherTongue, language, level);
+          .addUser(user!.uid, user.email!, motherTongue, language, level);
 
       return AuthResult(user: _userfromFirebase(user));
     } on FirebaseAuthException catch (e) {
