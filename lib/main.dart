@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
-import 'package:movielingo_app/screens/endpoints/endpoints.dart';
-import 'package:movielingo_app/screens/profile/profile.dart';
+import 'package:movielingo_app/screens/endpoints.dart';
+import 'package:movielingo_app/screens/home.dart';
+import 'package:movielingo_app/screens/profile.dart';
+import 'package:movielingo_app/screens/user_information.dart';
 import 'package:movielingo_app/screens/wrapper.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -44,11 +46,15 @@ class MyApp extends StatelessWidget {
 
 // Define the GoRouter
 final GoRouter _router = GoRouter(
-  routes: [
+  routes: <RouteBase>[
     GoRoute(
       path: '/',
       builder: (context, state) => const Wrapper(),
     ),
+    GoRoute(path: '/home', builder: (context, state) => const Home()),
+    GoRoute(
+        path: '/information',
+        builder: (context, state) => const UserInformation()),
     GoRoute(
       path: '/profile',
       builder: (context, state) => const Profile(),

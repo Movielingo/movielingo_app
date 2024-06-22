@@ -23,7 +23,9 @@ class AuthService {
 
   // create user obj based on FirebaseUser
   MyUser? _userfromFirebase(User? user) {
-    return user != null ? MyUser(uid: user.uid) : null;
+    return user != null
+        ? MyUser(uid: user.uid, isProfileComplete: false)
+        : null;
   }
 
   // auth change user stream that returns back a user whenever there is a
@@ -66,8 +68,8 @@ class AuthService {
       User? user = result.user;
 
       // create a new document for the user with the uid
-      await UserService()
-          .addUser(user!.uid, user.email!, motherTongue, language, level);
+      await UserService().addUser(
+          user!.uid, user.email!, motherTongue, language, level, false);
 
       return AuthResult(user: _userfromFirebase(user));
     } on FirebaseAuthException catch (e) {

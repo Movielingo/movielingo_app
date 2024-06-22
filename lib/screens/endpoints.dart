@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_media_service.dart';
 
-import '../../services/media_service.dart';
-import '../../services/user_service.dart';
+import '../services/media_service.dart';
+import '../services/user_service.dart';
 
 class Endpoints extends StatelessWidget {
   Endpoints({super.key});

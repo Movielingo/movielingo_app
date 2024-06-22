@@ -172,12 +172,8 @@ class _ProfileState extends State<Profile> {
                                   child: const Text('Save'),
                                   onPressed: () async {
                                     String userId = _auth.currentUser!.uid;
-                                    await _user.updateUser(
-                                      userId,
-                                      motherTongue,
-                                      language,
-                                      level,
-                                    );
+                                    await _user.updateUser(userId, motherTongue,
+                                        language, level, true);
                                     // ignore: use_build_context_synchronously
                                     Navigator.pop(context);
                                   },
