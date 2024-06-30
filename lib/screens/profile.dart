@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
@@ -75,6 +76,13 @@ class _ProfileState extends State<Profile> {
             label: const Text('Sign Out'),
             onPressed: () async {
               await _auth.signOut();
+              if (!mounted) return;
+              context.go('/');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('You have been signed out'),
+                ),
+              );
             },
           ),
         ],
