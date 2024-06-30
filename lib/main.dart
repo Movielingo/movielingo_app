@@ -38,6 +38,23 @@ class MyApp extends StatelessWidget {
               seedColor: Colors.cyan,
               brightness: Brightness.dark,
             ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.resolveWith(
+                  (states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey;
+                    }
+                    return Colors.cyan;
+                  },
+                ),
+              ),
+            ),
           ),
           routerConfig: _router),
     );

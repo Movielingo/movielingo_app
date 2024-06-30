@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/utils/snackbar_helper.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
 
 class SignUp extends StatefulWidget {
@@ -20,6 +21,13 @@ class _SignUpState extends State<SignUp> {
   String email = '';
   String password = '';
   String error = '';
+  bool isButtonEnabled = false;
+
+  void _updateButtonState() {
+    setState(() {
+      isButtonEnabled = _formKey.currentState?.validate() ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +48,16 @@ class _SignUpState extends State<SignUp> {
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
             key: _formKey,
+            onChanged: _updateButtonState,
             child: Column(children: <Widget>[
               const SizedBox(height: 20.0),
               TextFormField(
                   decoration: const InputDecoration(
                     hintText: 'Email*',
                     hintStyle: TextStyle(color: Colors.grey),
-                    fillColor: Colors.white,
-                    filled: true,
+                    border: OutlineInputBorder(),
                   ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                  style: const TextStyle(color: Colors.black),
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -59,11 +66,9 @@ class _SignUpState extends State<SignUp> {
                 decoration: const InputDecoration(
                   hintText: 'Password*',
                   hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  filled: true,
+                  border: OutlineInputBorder(),
                 ),
                 validator: (val) => ValidationUtils.validatePassword(val),
-                style: const TextStyle(color: Colors.black),
                 obscureText: true,
                 onChanged: (val) {
                   setState(() => password = val);
@@ -71,33 +76,42 @@ class _SignUpState extends State<SignUp> {
               ),
               // TODO: add confirm password field here
               const SizedBox(height: 20.0),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('* Required fields'),
+              ),
               const SizedBox(height: 20.0),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan[400],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      AuthResult result =
-                          await _auth.registerWithEmailAndPassword(
-                              email, password, 'german', 'english', 'b1');
-                      if (result.user == null) {
-                        setState(() => error = result.errorMessage ??
-                            'An unexpected error occurred.');
-                      } else {
-                        // Navigate after the async operation completes
-                        if (!mounted) return;
-                        context.go('/');
-                      }
-                    }
-                  },
+              SizedBox(
+                width: double.infinity,
+                height: 55.0,
+                child: ElevatedButton(
+                  onPressed: isButtonEnabled
+                      ? () async {
+                          if (_formKey.currentState!.validate()) {
+                            AuthResult result =
+                                await _auth.registerWithEmailAndPassword(
+                              email,
+                              password,
+                              'german',
+                              'english',
+                              'b1',
+                            );
+                            if (result.user == null && mounted) {
+                              showErrorSnackBar(context, result.errorMessage!);
+                            } else {
+                              // Navigate after the async operation completes
+                              if (!mounted) return;
+                              context.go('/');
+                            }
+                          }
+                        }
+                      : null,
                   child: const Text(
                     'Sign Up',
                     style: TextStyle(color: Colors.white),
-                  )),
+                  ),
+                ),
+              ),
               const SizedBox(height: 12.0),
               Text(
                 error,

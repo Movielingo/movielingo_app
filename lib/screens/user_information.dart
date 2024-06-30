@@ -70,8 +70,7 @@ class _UserInformationState extends State<UserInformation> {
                     decoration: const InputDecoration(
                       hintText: 'Your Mother Tongue*',
                       hintStyle: TextStyle(color: Colors.grey),
-                      fillColor: Colors.white,
-                      filled: true,
+                      border: OutlineInputBorder(),
                     ),
                     value: motherTongue.isEmpty ? null : motherTongue,
                     onChanged: (val) =>
@@ -92,8 +91,7 @@ class _UserInformationState extends State<UserInformation> {
                     decoration: const InputDecoration(
                       hintText: 'Language you want to learn*',
                       hintStyle: TextStyle(color: Colors.grey),
-                      fillColor: Colors.white,
-                      filled: true,
+                      border: OutlineInputBorder(),
                     ),
                     value: language.isEmpty ? null : language,
                     onChanged: (val) {
@@ -115,8 +113,7 @@ class _UserInformationState extends State<UserInformation> {
                     decoration: const InputDecoration(
                       hintText: 'Your Level*',
                       hintStyle: TextStyle(color: Colors.grey),
-                      fillColor: Colors.white,
-                      filled: true,
+                      border: OutlineInputBorder(),
                     ),
                     value: level.isEmpty ? null : level,
                     onChanged: (val) {
@@ -143,11 +140,10 @@ class _UserInformationState extends State<UserInformation> {
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Handle form submission or navigation here
                         String userId = _auth.currentUser!.uid;
                         await _user.updateUser(
                             userId, motherTongue, language, level, true);
-                        // ignore: use_build_context_synchronously
+                        if (!mounted) return;
                         context.go('/home');
                       }
                     },
