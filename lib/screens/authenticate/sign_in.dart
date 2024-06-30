@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movielingo_app/services/auth.dart';
 import 'package:movielingo_app/utils/snackbar_helper.dart';
 
@@ -91,13 +92,15 @@ class _SignInState extends State<SignIn> {
                               if (result == null && mounted) {
                                 showErrorSnackBar(context,
                                     'Could not sign in with those credentials');
+                              } else {
+                                if (!mounted) return;
+                                context.go('/home');
                               }
                             }
                           }
                         : null,
                     child: const Text(
                       'Sign in',
-                      style: TextStyle(color: Colors.white),
                     )),
               ),
             ]),

@@ -101,14 +101,13 @@ class _SignUpState extends State<SignUp> {
                             } else {
                               // Navigate after the async operation completes
                               if (!mounted) return;
-                              context.go('/');
+                              context.go('/information');
                             }
                           }
                         }
                       : null,
                   child: const Text(
                     'Sign Up',
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),

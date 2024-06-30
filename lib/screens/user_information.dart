@@ -131,25 +131,28 @@ class _UserInformationState extends State<UserInformation> {
                     }).toList(),
                   ),
                   const SizedBox(height: 20.0),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyan[400],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String userId = _auth.currentUser!.uid;
+                          await _user.updateUser(
+                              userId, motherTongue, language, level, true);
+                          if (!mounted) return;
+                          context.go('/home');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text('User information saved successfull!'),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Save Information',
                       ),
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        String userId = _auth.currentUser!.uid;
-                        await _user.updateUser(
-                            userId, motherTongue, language, level, true);
-                        if (!mounted) return;
-                        context.go('/home');
-                      }
-                    },
-                    child: const Text(
-                      'Save Information',
-                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 12.0),
