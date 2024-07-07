@@ -6,7 +6,7 @@ import 'package:movielingo_app/screens/endpoints.dart';
 import 'package:movielingo_app/screens/home.dart';
 import 'package:movielingo_app/screens/profile.dart';
 import 'package:movielingo_app/screens/user_information.dart';
-import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
                 textStyle: MaterialStateProperty.all(
                   const TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 foregroundColor: MaterialStateProperty.resolveWith(

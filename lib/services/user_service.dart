@@ -47,4 +47,9 @@ class UserService {
   Future<void> deleteUser(String userId) async {
     return _usersCollection.doc(userId).delete();
   }
+
+  Future<bool> checkUserExists(String uid) async {
+    var doc = await _usersCollection.doc(uid).get();
+    return doc.exists;
+  }
 }

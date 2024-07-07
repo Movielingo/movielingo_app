@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/singletons/logger.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // Define a custom result type
 class AuthResult {
@@ -87,6 +88,43 @@ class AuthService {
     } catch (e) {
       LoggerSingleton().logger.e(e.toString());
       return AuthResult(errorMessage: 'An unexpected error occurred.');
+    }
+  }
+
+  // sign in with Google
+  Future<AuthResult> signInWithGoogle() async {
+    try {
+      // begin interactive sign in process
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+      // obtain auth details from request
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+
+      // create a new credential for the user
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+
+      // sign in with the credential
+      UserCredential result = await _auth.signInWithCredential(credential);
+      User? user = result.user;
+
+      // check if user exists in Firestore
+      final userService = UserService();
+      final userExists = await userService.checkUserExists(user!.uid);
+
+      if (!userExists) {
+        // create a new document for the user with the uid if it doesn't exist
+        await userService.addUser(
+            user.uid, user.email!, 'german', 'english', 'b1', false);
+      }
+
+      return AuthResult(user: _userfromFirebase(user));
+    } catch (e) {
+      LoggerSingleton().logger.e(e.toString());
+      return AuthResult(
+          errorMessage: 'An error occurred during Google sign-in.');
     }
   }
 
