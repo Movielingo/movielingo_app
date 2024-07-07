@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:movielingo_app/services/auth.dart';
+import 'package:movielingo_app/components/square_tile.dart';
+import 'package:movielingo_app/services/auth_service.dart';
 import 'package:movielingo_app/utils/snackbar_helper.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
 
@@ -29,6 +30,17 @@ class _SignUpState extends State<SignUp> {
     });
   }
 
+  Future<void> _signUpWithGoogle() async {
+    AuthResult result = await _auth.signInWithGoogle();
+    if (result.user == null && mounted) {
+      showErrorSnackBar(context, result.errorMessage!);
+    } else {
+      // Navigate after the async operation completes
+      if (!mounted) return;
+      context.go('/information');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +56,7 @@ class _SignUpState extends State<SignUp> {
               },
             ),
           ]),
-      body: Container(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
             key: _formKey,
@@ -111,7 +123,42 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12.0),
+              const SizedBox(height: 40.0),
+
+              // or continue with
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('Or continue with',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ])),
+              const SizedBox(height: 40.0),
+
+              // google sign up
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SquareTile(
+                    onTap: _signUpWithGoogle,
+                    imagePath: 'assets/images/google.png'),
+              ]),
+
+              // error message
               Text(
                 error,
                 style: const TextStyle(color: Colors.red, fontSize: 14.0),
