@@ -8,12 +8,13 @@ class UserService {
       FirebaseFirestore.instance.collection('Users');
 
   Future<void> addUser(String userId, String email, String motherTongue,
-      String language, String level) async {
+      String language, String level, bool isProfileComplete) async {
     return await _usersCollection.doc(userId).set({
       'email': email,
       'motherTongue': motherTongue.toLowerCase(),
       'language': language.toLowerCase(),
       'level': level.toLowerCase(),
+      'isProfileComplete': isProfileComplete,
     });
   }
 
@@ -29,15 +30,26 @@ class UserService {
   }
 
   Future<void> updateUser(
-      String userId, String motherTongue, String language, String level) async {
+    String userId,
+    String motherTongue,
+    String language,
+    String level,
+    bool isProfileComplete,
+  ) async {
     return _usersCollection.doc(userId).update({
       'motherTongue': motherTongue.toLowerCase(),
       'language': language.toLowerCase(),
       'level': level.toLowerCase(),
+      'isProfileComplete': isProfileComplete,
     });
   }
 
   Future<void> deleteUser(String userId) async {
     return _usersCollection.doc(userId).delete();
+  }
+
+  Future<bool> checkUserExists(String uid) async {
+    var doc = await _usersCollection.doc(uid).get();
+    return doc.exists;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movielingo_app/screens/profile/profile.dart';
-import 'package:movielingo_app/screens/endpoints/endpoints.dart';
+import 'package:movielingo_app/screens/profile.dart';
+import 'package:movielingo_app/screens/endpoints.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

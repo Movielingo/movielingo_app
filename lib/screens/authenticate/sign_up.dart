@@ -1,6 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:movielingo_app/services/auth.dart';
+import 'package:go_router/go_router.dart';
+import 'package:movielingo_app/components/square_tile.dart';
+import 'package:movielingo_app/services/auth_service.dart';
+import 'package:movielingo_app/utils/snackbar_helper.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
 
 class SignUp extends StatefulWidget {
@@ -19,10 +21,25 @@ class _SignUpState extends State<SignUp> {
   // text field state
   String email = '';
   String password = '';
-  String motherTongue = '';
-  String language = '';
-  String level = '';
   String error = '';
+  bool isButtonEnabled = false;
+
+  void _updateButtonState() {
+    setState(() {
+      isButtonEnabled = _formKey.currentState?.validate() ?? false;
+    });
+  }
+
+  Future<void> _signUpWithGoogle() async {
+    AuthResult result = await _auth.signInWithGoogle();
+    if (result.user == null && mounted) {
+      showErrorSnackBar(context, result.errorMessage!);
+    } else {
+      // Navigate after the async operation completes
+      if (!mounted) return;
+      context.go('/information');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +56,20 @@ class _SignUpState extends State<SignUp> {
               },
             ),
           ]),
-      body: Container(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
             key: _formKey,
+            onChanged: _updateButtonState,
             child: Column(children: <Widget>[
               const SizedBox(height: 20.0),
               TextFormField(
                   decoration: const InputDecoration(
                     hintText: 'Email*',
                     hintStyle: TextStyle(color: Colors.grey),
-                    fillColor: Colors.white,
-                    filled: true,
+                    border: OutlineInputBorder(),
                   ),
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                  style: const TextStyle(color: Colors.black),
                   onChanged: (val) {
                     setState(() => email = val);
                   }),
@@ -62,108 +78,87 @@ class _SignUpState extends State<SignUp> {
                 decoration: const InputDecoration(
                   hintText: 'Password*',
                   hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  filled: true,
+                  border: OutlineInputBorder(),
                 ),
                 validator: (val) => ValidationUtils.validatePassword(val),
-                style: const TextStyle(color: Colors.black),
                 obscureText: true,
                 onChanged: (val) {
                   setState(() => password = val);
                 },
               ),
+              // TODO: add confirm password field here
               const SizedBox(height: 20.0),
-              const SizedBox(height: 20.0),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  hintText: 'Your Mother Tongue*',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                value: motherTongue.isEmpty ? null : motherTongue,
-                onChanged: (val) => setState(() => motherTongue = val ?? ''),
-                validator: (val) => val == null || val.isEmpty
-                    ? 'Select your mother tongue'
-                    : null,
-                items: ValidationUtils.motherTongues
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('* Required fields'),
               ),
               const SizedBox(height: 20.0),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  hintText: 'Language you want to learn*',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                value: language.isEmpty ? null : language,
-                onChanged: (val) {
-                  setState(() => language = val ?? '');
-                },
-                validator: (val) => val == null || val.isEmpty
-                    ? 'Select the language you want to learn'
-                    : null,
-                items: <String>['German', 'English']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20.0),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  hintText: 'Your Level*',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
-                value: level.isEmpty ? null : level,
-                onChanged: (val) {
-                  setState(() => level = val ?? '');
-                },
-                validator: (val) => val == null || val.isEmpty
-                    ? 'Select your level in the language you want to learn'
-                    : null,
-                items: <String>['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan[400],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      AuthResult result =
-                          await _auth.registerWithEmailAndPassword(
-                              email, password, motherTongue, language, level);
-                      if (result.user == null) {
-                        setState(() => error = result.errorMessage ??
-                            'An unexpected error occurred.');
-                      }
-                    }
-                  },
+              SizedBox(
+                width: double.infinity,
+                height: 55.0,
+                child: ElevatedButton(
+                  onPressed: isButtonEnabled
+                      ? () async {
+                          if (_formKey.currentState!.validate()) {
+                            AuthResult result =
+                                await _auth.registerWithEmailAndPassword(
+                              email,
+                              password,
+                              'german',
+                              'english',
+                              'b1',
+                            );
+                            if (result.user == null && mounted) {
+                              showErrorSnackBar(context, result.errorMessage!);
+                            } else {
+                              // Navigate after the async operation completes
+                              if (!mounted) return;
+                              context.go('/information');
+                            }
+                          }
+                        }
+                      : null,
                   child: const Text(
                     'Sign Up',
-                    style: TextStyle(color: Colors.white),
-                  )),
-              const SizedBox(height: 12.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40.0),
+
+              // or continue with
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text('Or continue with',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ])),
+              const SizedBox(height: 40.0),
+
+              // google sign up
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                SquareTile(
+                    onTap: _signUpWithGoogle,
+                    imagePath: 'assets/images/google.png'),
+              ]),
+
+              // error message
               Text(
                 error,
                 style: const TextStyle(color: Colors.red, fontSize: 14.0),
