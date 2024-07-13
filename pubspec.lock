@@ -193,6 +193,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.5"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: ce1b0efe8dc111058c5f079b2f2ce84906d030d0fd2eef70c42ca1253c67039a
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.6.9"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: "4a2b64d4dac096390a0b7f2e7b6d086d0546c4a1bf7ee3fc4b5ae4cc41005c46"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.12"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: "4153814db8d59138e816d9f016736e4095c45675a2c18f2868d11ffd8cc6a4ca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -224,6 +248,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      sha256: e4e7335ede17452b391ed3b2ede016545706c01a02292a6c97619705e7d2a85e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.6"
   glob:
     dependency: transitive
     description:
@@ -232,14 +264,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  go_router:
-    dependency: "direct main"
-    description:
-      name: go_router
-      sha256: "5ed2687bc961f33a752017ccaa7edead3e5601b28b6376a5901bf24728556b85"
-      url: "https://pub.dev"
-    source: hosted
-    version: "13.2.2"
   google_identity_services_web:
     dependency: transitive
     description:

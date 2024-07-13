@@ -8,7 +8,7 @@ import 'package:movielingo_app/screens/profile.dart';
 import 'package:movielingo_app/screens/user_information.dart';
 import 'package:movielingo_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 
 import 'firebase_options.dart';
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider<MyUser?>.value(
       initialData: null,
       value: AuthService().user,
-      child: MaterialApp.router(
+      child: GetMaterialApp(
           title: 'MovieLingo',
           theme: ThemeData(
             useMaterial3: true,
@@ -70,29 +70,14 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          routerConfig: _router),
+          initialRoute: '/',
+          getPages: [
+            GetPage(name: '/', page: () => const Authenticate()),
+            GetPage(name: '/information', page: () => const UserInformation()),
+            GetPage(name: '/home', page: () => const Home()),
+            GetPage(name: '/profile', page: () => const Profile()),
+            GetPage(name: '/endpoints', page: () => Endpoints()),
+          ]),
     );
   }
 }
-
-// Define the GoRouter
-final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Authenticate(),
-    ),
-    GoRoute(
-        path: '/information',
-        builder: (context, state) => const UserInformation()),
-    GoRoute(path: '/home', builder: (context, state) => const Home()),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const Profile(),
-    ),
-    GoRoute(
-      path: '/endpoints',
-      builder: (context, state) => Endpoints(),
-    ),
-  ],
-);

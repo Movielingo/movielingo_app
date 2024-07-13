@@ -5,7 +5,7 @@ import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/utils/string_utils.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 
 class UserInformation extends StatefulWidget {
   const UserInformation({super.key});
@@ -141,13 +141,9 @@ class _UserInformationState extends State<UserInformation> {
                           await _user.updateUser(
                               userId, motherTongue, language, level, true);
                           if (!mounted) return;
-                          context.go('/home');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('User information saved successfull!'),
-                            ),
-                          );
+                          Get.toNamed('/home');
+                          Get.snackbar('Success!',
+                              'Your user information was saved successfully!');
                         }
                       },
                       child: const Text(

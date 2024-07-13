@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/screens/profile.dart';
 import 'package:movielingo_app/screens/endpoints.dart';
+import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,6 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
 
   @override
@@ -23,6 +25,23 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Movielingo'),
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          TextButton.icon(
+            icon: const Icon(Icons.logout),
+            label: const Text(''),
+            onPressed: () async {
+              await _auth.signOut();
+              if (!mounted) return;
+              Get.toNamed('/');
+              Get.snackbar('Sign Out!', 'You have been signed out');
+            },
+          ),
+        ],
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: screens,
