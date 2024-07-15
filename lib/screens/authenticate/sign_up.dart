@@ -46,6 +46,7 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
           elevation: 0.0,
           title: const Text('Sign Up to MovieLingo'),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             TextButton.icon(
               icon: const Icon(Icons.person),

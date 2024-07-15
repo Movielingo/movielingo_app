@@ -45,6 +45,7 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
           elevation: 0.0,
           title: const Text('Sign In to MovieLingo'),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             TextButton.icon(
               icon: const Icon(Icons.person),

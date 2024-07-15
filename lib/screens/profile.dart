@@ -5,7 +5,6 @@ import 'package:movielingo_app/services/user_service.dart';
 import 'package:movielingo_app/models/enums.dart';
 import 'package:movielingo_app/utils/string_utils.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
-import 'package:get/get.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
