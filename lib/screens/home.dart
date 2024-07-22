@@ -5,6 +5,7 @@ import 'package:movielingo_app/screens/media_detail.dart';
 import 'package:movielingo_app/screens/profile.dart';
 import 'package:movielingo_app/screens/endpoints.dart';
 import 'package:movielingo_app/services/media_service.dart';
+import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
@@ -16,6 +17,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorageService _firebaseStorageService =
+      Get.find<FirebaseStorageService>();
   int _selectedIndex = 0;
   late Future<List<Movie>?> _moviesFuture;
 
@@ -26,28 +29,53 @@ class _HomeState extends State<Home> {
   }
 
   void _onMovieTap(Movie movie) {
-    Get.to(MediaDetail(movie: movie));
+    Get.to(() => MediaDetail(movie: movie));
   }
 
   Widget _buildMovieItem(Movie movie) {
-    return GestureDetector(
-      onTap: () => _onMovieTap(movie),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-              'https://firebasestorage.googleapis.com/v0/b/movielingo-717e0.appspot.com/o/media%2Ffriends_english.jpeg?alt=media&token=fad7f988-61f4-4b1e-9aa0-661c7340c32b',
-              fit: BoxFit.cover), // Assuming imgRef is the URL
-          const SizedBox(height: 8),
-          Text(
-            movie.title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            movie.imgRef,
-          ),
-        ],
-      ),
+    return FutureBuilder<String?>(
+      future: _firebaseStorageService.getImage(movie.imgRef),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError || !snapshot.hasData) {
+          return const Center(child: Text('Error loading image'));
+        } else {
+          return GestureDetector(
+            onTap: () => _onMovieTap(movie),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Image.network(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Text(
+                    movie.title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    movie.imgRef,
+                    style: const TextStyle(fontSize: 14),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 

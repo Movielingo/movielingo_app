@@ -7,6 +7,7 @@ import 'package:movielingo_app/screens/home.dart';
 import 'package:movielingo_app/screens/profile.dart';
 import 'package:movielingo_app/screens/user_information.dart';
 import 'package:movielingo_app/services/auth_service.dart';
+import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +19,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  Get.put(FirebaseStorageService());
+
   runApp(const MyApp());
 }
 
