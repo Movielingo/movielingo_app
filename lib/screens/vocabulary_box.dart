@@ -35,20 +35,18 @@ class VocabularyBox extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Flexible(
-                  child: Text(
-                    movie.title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-                Flexible(
-                  child: Text(
-                    movie.imgRef,
-                    style: const TextStyle(fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      vocabularyBoxController
+                          .deleteMovieFromVocabularyBox(movie);
+                      Get.snackbar(
+                          'Success', 'Movie deleted from your vocabulary box!');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.red, // Set the background color to red
+                    ),
+                    child: const Text('Delete'),
                   ),
                 ),
               ],
@@ -70,7 +68,7 @@ class VocabularyBox extends StatelessWidget {
             crossAxisCount: 3,
             crossAxisSpacing: 8,
             mainAxisSpacing: 8,
-            childAspectRatio: 0.7,
+            childAspectRatio: 0.6,
           ),
           itemCount: vocabularyBoxController.vocabularyBox.length,
           itemBuilder: (context, index) {

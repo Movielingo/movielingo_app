@@ -12,11 +12,22 @@ class VocabularyBoxController extends GetxController {
     _loadVocabularyBox();
   }
 
+  @override
+  void onClose() {
+    _saveVocabularyBox();
+    super.onClose();
+  }
+
   void addMovieToVocabularyBox(Movie movie) {
     if (!vocabularyBox.any((m) => m.id == movie.id)) {
       vocabularyBox.add(movie);
       _saveVocabularyBox();
     }
+  }
+
+  void deleteMovieFromVocabularyBox(Movie movie) {
+    vocabularyBox.removeWhere((m) => m.id == movie.id);
+    _saveVocabularyBox();
   }
 
   void _loadVocabularyBox() async {

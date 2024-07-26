@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorageService _firebaseStorageService =
       Get.find<FirebaseStorageService>();
@@ -26,7 +26,46 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _moviesFuture = getAllMovies('EnglishMedia', 'german');
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _refreshData();
+    } else if (state == AppLifecycleState.paused) {
+      _saveData();
+    } else if (state == AppLifecycleState.inactive) {
+      _pauseMediaPlayback();
+    } else if (state == AppLifecycleState.detached) {
+      _cleanupResources();
+    }
+  }
+
+  void _refreshData() {
+    setState(() {
+      _moviesFuture = getAllMovies('EnglishMedia', 'german');
+    });
+  }
+
+  void _saveData() {
+    // TODO: Add logic to save data
+  }
+
+  void _pauseMediaPlayback() {
+    // TODO: add some functionality to pause media playback once I implemented it...
+  }
+
+  void _cleanupResources() {
+    // TODO: add some methods to clean up resources e.g. close streams or something like that...
   }
 
   void _onMovieTap(Movie movie) {
@@ -158,10 +197,6 @@ class _HomeState extends State<Home> {
               selectedIcon: Icon(Icons.person),
               icon: Icon(Icons.person_outlined),
               label: 'Profile'),
-/*           NavigationDestination(
-              selectedIcon: Icon(Icons.settings),
-              icon: Icon(Icons.settings_outlined),
-              label: 'Endpoints'), */
         ],
       ),
     );
