@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/movie.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:get/get.dart';
+import 'package:movielingo_app/controllers/vocabulary_box_controller.dart';
 
 class MediaDetail extends StatelessWidget {
   final Movie movie;
@@ -12,6 +13,8 @@ class MediaDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final FirebaseStorageService firebaseStorageService =
         Get.find<FirebaseStorageService>();
+    final VocabularyBoxController vocabularyBoxController =
+        Get.put(VocabularyBoxController());
 
     return Scaffold(
       appBar: AppBar(),
@@ -50,7 +53,7 @@ class MediaDetail extends StatelessWidget {
                   const Text('Original language: ENGLISH'),
                   const SizedBox(height: 4),
                   Text(
-                      'Available translation languages to study: ${movie.translationLanguage.join('').toUpperCase()}'),
+                      'Available translation languages to study: ${movie.translationLanguage.join(', ').toUpperCase()}'),
                   const SizedBox(height: 16),
                   Text(
                       '${movie.vocabCounts.a1VocabCount.toString()} A1 vocabulary words'),
@@ -74,6 +77,16 @@ class MediaDetail extends StatelessWidget {
             );
           }
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: () {
+            vocabularyBoxController.addMovieToVocabularyBox(movie);
+            Get.snackbar('Success', 'Movie added to your vocabulary box!');
+          },
+          child: const Text('Add to Vocabulary Box'),
+        ),
       ),
     );
   }

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/movie.dart';
 import 'package:movielingo_app/screens/media_detail.dart';
 import 'package:movielingo_app/screens/profile.dart';
-import 'package:movielingo_app/screens/endpoints.dart';
+// import 'package:movielingo_app/screens/endpoints.dart';
+import 'package:movielingo_app/screens/vocabulary_box.dart';
 import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:get/get.dart';
@@ -110,8 +111,8 @@ class _HomeState extends State<Home> {
           },
         ),
       ),
+      const VocabularyBox(),
       const Profile(),
-      Endpoints(),
     ];
 
     return Scaffold(
@@ -150,13 +151,17 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.home_outlined),
               label: 'Home'),
           NavigationDestination(
+              selectedIcon: Icon(Icons.book),
+              icon: Icon(Icons.book_outlined),
+              label: 'Your Box'),
+          NavigationDestination(
               selectedIcon: Icon(Icons.person),
               icon: Icon(Icons.person_outlined),
               label: 'Profile'),
-          NavigationDestination(
+/*           NavigationDestination(
               selectedIcon: Icon(Icons.settings),
               icon: Icon(Icons.settings_outlined),
-              label: 'Endpoints'),
+              label: 'Endpoints'), */
         ],
       ),
     );

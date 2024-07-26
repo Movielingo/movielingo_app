@@ -35,10 +35,7 @@ class Movie extends Media {
       imgRef: data['imgRef'],
       description: data['description'],
       genres: Genre.getGenresFromSnapshotData(data),
-      translationLanguage: data['translationLanguage']
-          .map((item) => item.toString())
-          .toList()
-          .cast<String>(),
+      translationLanguage: List<String>.from(data['translationLanguage']),
       director: data['director'],
       lengthMin: data['lengthMin'],
       release: data['release'],
@@ -51,5 +48,35 @@ class Movie extends Media {
     LoggerSingleton().logger.i(ref.getDownloadURL());
     // return await ref.getDownloadURL();
     return 'Test';
+  }
+
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
+      id: json['id'],
+      title: json['title'],
+      imgRef: json['imgRef'],
+      description: json['description'],
+      genres: Genre.getGenresFromJson(json['genres']),
+      translationLanguage: List<String>.from(json['translationLanguage']),
+      director: json['director'],
+      lengthMin: json['lengthMin'],
+      release: json['release'],
+      vocabCounts: CSRFVocabCounts.fromJson(json['vocabCounts']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'imgRef': imgRef,
+      'description': description,
+      'genres': Genre.genresToJson(genres),
+      'translationLanguage': translationLanguage,
+      'director': director,
+      'lengthMin': lengthMin,
+      'release': release,
+      'vocabCounts': vocabCounts.toJson(),
+    };
   }
 }
