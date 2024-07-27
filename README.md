@@ -49,6 +49,20 @@ Movielingo uses various services to interact with the Firestore database. Some o
 
 - **VocabularyService**: Provides methods to interact with the UserVocabulary collection in the Firestore database, e.g., fetching all user vocabulary of a specific movie/series or adding new vocabulary to the user's vocabulary.
 
+### 🎨 Screens
+
+- **AuthenticationScreen**: Displays the sign-in and sign-up forms. The user can sign in using their email and password or using Google Sign-In.
+
+- **HomeScreen**: Displays the list of movies available in the database. The user can click on a movie to view its details.
+
+- **MovieDetailsScreen**: Displays the details of a specific movie, including the title, genre, release year, and a brief description. The user can also add the movie to their list of movies (the so called "Vocabulary Box").
+
+- **ProfileScreen**: Displays the user's profile information, including their name, email, first language, and target language. The user can also edit their profile information.
+
+- **VocabularyBoxScreen**: Displays the user's list of movies. The user can click on a movie to view its vocabulary and progress. The user can also delete a movie from their list of movies. The user can also start the vocabulary trainer for a specific movie.
+
+- **VocabularyTrainerScreen (WIP)**: Displays the user's vocabulary for a specific movie. The user can see the words, their meanings, and the context in which they were used in the movie. The user can also test their knowledge and track their progress.
+
 ## 🚀 Getting Started
 
 If you're new to Flutter, these resources will help you hit the ground running:
