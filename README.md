@@ -49,6 +49,8 @@ Movielingo uses various services to interact with the Firestore database. Some o
 
 - **VocabularyService**: Provides methods to interact with the UserVocabulary collection in the Firestore database, e.g., fetching all user vocabulary of a specific movie/series or adding new vocabulary to the user's vocabulary.
 
+- **FirebaseStorageService**: Provides methods to interact with the Firebase Storage, e.g., uploading or fetching an image to/from the Firebase Storage.
+
 ### 🎨 Screens
 
 - **AuthenticationScreen**: Displays the sign-in and sign-up forms. The user can sign in using their email and password or using Google Sign-In.
