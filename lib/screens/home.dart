@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/models/movie.dart';
+import 'package:movielingo_app/models/myuser.dart';
 import 'package:movielingo_app/screens/media_detail.dart';
 import 'package:movielingo_app/screens/profile.dart';
-// import 'package:movielingo_app/screens/endpoints.dart';
 import 'package:movielingo_app/screens/vocabulary_box.dart';
 import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
+import 'package:movielingo_app/services/user_service.dart';
 import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
@@ -20,20 +21,31 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorageService _firebaseStorageService =
       Get.find<FirebaseStorageService>();
+  final UserService userService = UserService();
   int _selectedIndex = 0;
   late Future<List<Movie>?> _moviesFuture;
+  MyUserData? user;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _moviesFuture = getAllMovies('EnglishMedia', 'german');
+    _loadCurrentUser();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> _loadCurrentUser() async {
+    String userId = _auth.currentUser?.uid ?? '';
+    if (userId.isNotEmpty) {
+      user = await userService.getUser(userId);
+      setState(() {});
+    }
   }
 
   @override
@@ -69,7 +81,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   void _onMovieTap(Movie movie) {
-    Get.to(() => MediaDetail(movie: movie));
+    if (user != null) {
+      Get.to(() => MediaDetail(movie: movie, user: user!));
+    }
   }
 
   Widget _buildMovieItem(Movie movie) {

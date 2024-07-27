@@ -57,6 +57,10 @@ class VocabularyBox extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Movies stored on this device'),
+        automaticallyImplyLeading: false,
+      ),
       body: Obx(() {
         if (vocabularyBoxController.vocabularyBox.isEmpty) {
           return const Center(

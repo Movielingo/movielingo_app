@@ -3,11 +3,13 @@ import 'package:movielingo_app/models/movie.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:get/get.dart';
 import 'package:movielingo_app/controllers/vocabulary_box_controller.dart';
+import 'package:movielingo_app/models/myuser.dart';
 
 class MediaDetail extends StatelessWidget {
   final Movie movie;
+  final MyUserData user;
 
-  const MediaDetail({required this.movie, super.key});
+  const MediaDetail({required this.movie, required this.user, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,7 @@ class MediaDetail extends StatelessWidget {
         Get.find<FirebaseStorageService>();
     final VocabularyBoxController vocabularyBoxController =
         Get.put(VocabularyBoxController());
+    vocabularyBoxController.setUser(user);
 
     return Scaffold(
       appBar: AppBar(),

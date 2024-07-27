@@ -1,10 +1,14 @@
 import 'package:get/get.dart';
+import 'package:movielingo_app/models/user_media.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:movielingo_app/models/movie.dart';
+import 'package:movielingo_app/models/myuser.dart';
+import 'package:movielingo_app/services/user_media_service.dart';
 
 class VocabularyBoxController extends GetxController {
   var vocabularyBox = <Movie>[].obs;
+  MyUserData? user;
 
   @override
   void onInit() {
@@ -18,8 +22,19 @@ class VocabularyBoxController extends GetxController {
     super.onClose();
   }
 
-  void addMovieToVocabularyBox(Movie movie) {
-    if (!vocabularyBox.any((m) => m.id == movie.id)) {
+  void setUser(MyUserData userData) {
+    user = userData;
+    _syncVocabularyBoxWithDatabase();
+  }
+
+  Future<void> addMovieToVocabularyBox(Movie movie) async {
+    if (user == null) return;
+    await addMovieToUser(
+        user!, 'EnglishMedia', movie.translationLanguage.join(', '), movie.id);
+
+    List<UserMedia> userMediaList = await getUserMedia(user!.id);
+    if (userMediaList.any((userMedia) => userMedia.mediaId == movie.id) &&
+        !vocabularyBox.any((m) => m.id == movie.id)) {
       vocabularyBox.add(movie);
       _saveVocabularyBox();
     }
@@ -44,5 +59,13 @@ class VocabularyBoxController extends GetxController {
     final String encodedBox =
         jsonEncode(vocabularyBox.map((e) => e.toJson()).toList());
     prefs.setString('vocabularyBox', encodedBox);
+  }
+
+  Future<void> _syncVocabularyBoxWithDatabase() async {
+    if (user == null) return;
+    List<UserMedia> userMediaList = await getUserMedia(user!.id);
+    vocabularyBox.retainWhere((movie) =>
+        userMediaList.any((userMedia) => userMedia.mediaId == movie.id));
+    _saveVocabularyBox();
   }
 }
