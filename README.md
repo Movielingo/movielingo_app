@@ -17,13 +17,13 @@
 - **Frontend**: Built with Flutter, a versatile UI toolkit for building natively compiled applications.
 - **Backend**: Firestore - a flexible, scalable NoSQL cloud database from Google Firebase, known for real-time data synchronization and robust offline capabilities.
 
-## Software Architecture
+## 🏛 Software Architecture
 
 Movielingo uses a Firebase Firestore database to store user data, movie details, vocabulary, the user's movies, the user's vocabulary and the user's progress. For more information on the database, please refer to [Movielingo Database](https://github.com/Movielingo/.github/blob/main/profile/README.md#-database).
 
 For all possible CRUD operations, please refer to [Movielingo CRUD Operations](https://github.com/Movielingo/.github/blob/main/profile/README.md#-contribution-list).
 
-### Models
+### 🕹️ Models
 
 Movielingo uses various models to represent the data stored in the Firestore database. Some of the models include:
 
@@ -35,7 +35,7 @@ Movielingo uses various models to represent the data stored in the Firestore dat
 
 - **UserVocabulary**: Represents a user's vocabulary in the database with attributes like the word lemma, the word type, the word level, the user ID, the userMediaId, sentences containing the word, and the translation of the word.
 
-### Services
+### 🤝 Services
 
 Movielingo uses various services to interact with the Firestore database. Some of the services include:
 
