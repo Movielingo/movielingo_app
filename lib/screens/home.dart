@@ -9,6 +9,7 @@ import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:get/get.dart';
+import 'package:movielingo_app/controllers/accelerometer_controller.dart'; // Import the AccelerometerController
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,6 +23,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   final FirebaseStorageService _firebaseStorageService =
       Get.find<FirebaseStorageService>();
   final UserService userService = UserService();
+  final AccelerometerController accelerometerController =
+      Get.put(AccelerometerController());
   int _selectedIndex = 0;
   late Future<List<Movie>?> _moviesFuture;
   MyUserData? user;
@@ -186,10 +189,27 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: screens,
-      ),
+      body: Obx(() {
+        if (accelerometerController.isStationary.value) {
+          return Column(
+            children: [
+              const Text(
+                  'You are stationary. This is a great time to practice vocabulary!'),
+              Expanded(
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: screens,
+                ),
+              ),
+            ],
+          );
+        } else {
+          return IndexedStack(
+            index: _selectedIndex,
+            children: screens,
+          );
+        }
+      }),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _selectedIndex,

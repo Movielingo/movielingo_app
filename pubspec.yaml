@@ -44,6 +44,7 @@ dependencies:
   get: ^4.6.6
   shared_preferences: ^2.2.3
   firebase_app_check: ^0.2.1+17
+  sensors_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
