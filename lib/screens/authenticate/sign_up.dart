@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:movielingo_app/components/square_tile.dart';
 import 'package:movielingo_app/services/auth_service.dart';
-import 'package:movielingo_app/utils/snackbar_helper.dart';
 import 'package:movielingo_app/utils/validation_utils.dart';
 
 class SignUp extends StatefulWidget {
@@ -33,11 +32,11 @@ class _SignUpState extends State<SignUp> {
   Future<void> _signUpWithGoogle() async {
     AuthResult result = await _auth.signInWithGoogle();
     if (result.user == null && mounted) {
-      showErrorSnackBar(context, result.errorMessage!);
+      Get.snackbar('Error!', result.errorMessage!, backgroundColor: Colors.red);
     } else {
       // Navigate after the async operation completes
       if (!mounted) return;
-      context.go('/information');
+      Get.toNamed('/information');
     }
   }
 
@@ -47,6 +46,7 @@ class _SignUpState extends State<SignUp> {
       appBar: AppBar(
           elevation: 0.0,
           title: const Text('Sign Up to MovieLingo'),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             TextButton.icon(
               icon: const Icon(Icons.person),
@@ -109,11 +109,12 @@ class _SignUpState extends State<SignUp> {
                               'b1',
                             );
                             if (result.user == null && mounted) {
-                              showErrorSnackBar(context, result.errorMessage!);
+                              Get.snackbar('Error!', result.errorMessage!,
+                                  backgroundColor: Colors.red);
                             } else {
                               // Navigate after the async operation completes
                               if (!mounted) return;
-                              context.go('/information');
+                              Get.toNamed('/information');
                             }
                           }
                         }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:movielingo_app/components/square_tile.dart';
 import 'package:movielingo_app/services/auth_service.dart';
-import 'package:movielingo_app/utils/snackbar_helper.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -32,11 +31,11 @@ class _SignInState extends State<SignIn> {
   Future<void> _signInWithGoogle() async {
     AuthResult result = await _auth.signInWithGoogle();
     if (result.user == null && mounted) {
-      showErrorSnackBar(context, result.errorMessage!);
+      Get.snackbar('Error!', result.errorMessage!, backgroundColor: Colors.red);
     } else {
       // Navigate after the async operation completes
       if (!mounted) return;
-      context.go('/home');
+      Get.toNamed('/home');
     }
   }
 
@@ -46,6 +45,7 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
           elevation: 0.0,
           title: const Text('Sign In to MovieLingo'),
+          automaticallyImplyLeading: false,
           actions: <Widget>[
             TextButton.icon(
               icon: const Icon(Icons.person),
@@ -102,11 +102,12 @@ class _SignInState extends State<SignIn> {
                               dynamic result = await _auth
                                   .signInWithEmailAndPassword(email, password);
                               if (result == null && mounted) {
-                                showErrorSnackBar(context,
-                                    'Could not sign in with those credentials');
+                                Get.snackbar('Error!',
+                                    'Could not sign in with those credentials',
+                                    backgroundColor: Colors.red);
                               } else {
                                 if (!mounted) return;
-                                context.go('/home');
+                                Get.toNamed('/home');
                               }
                             }
                           }

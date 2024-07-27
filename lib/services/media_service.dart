@@ -131,11 +131,13 @@ Future<List<Movie>?> getAllMovies(
     }).toList();
     for (Movie movie in movies) {
       LoggerSingleton().logger.i(movie.title);
+      LoggerSingleton().logger.i(movie.imgRef);
     }
+    return movies;
   } catch (e) {
     LoggerSingleton().logger.e('Error when fetching all movies: ', error: e);
+    return null;
   }
-  return null;
 }
 
 Future<List<Series>?> getAllSeries(

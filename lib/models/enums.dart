@@ -19,6 +19,17 @@ enum Genre {
           orElse: () => throw ArgumentError('Invalid genre name: $str'));
     }).toList();
   }
+
+  static List<Genre> getGenresFromJson(List<dynamic> json) {
+    return json.map((str) {
+      return Genre.values.firstWhere((e) => e.toString().split('.')[1] == str,
+          orElse: () => throw ArgumentError('Invalid genre name: $str'));
+    }).toList();
+  }
+
+  static List<String> genresToJson(List<Genre> genres) {
+    return genres.map((genre) => genre.toString().split('.')[1]).toList();
+  }
 }
 
 enum WordType {
