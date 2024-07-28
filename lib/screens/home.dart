@@ -9,6 +9,7 @@ import 'package:movielingo_app/services/media_service.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:get/get.dart';
+import 'package:movielingo_app/controllers/accelerometer_controller.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,12 +27,24 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   late Future<List<Movie>?> _moviesFuture;
   MyUserData? user;
 
+  final AccelerometerController _accelerometerController =
+      Get.put(AccelerometerController());
+  bool _isMessageVisible = true;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _moviesFuture = getAllMovies('EnglishMedia', 'german');
     _loadCurrentUser();
+
+    _accelerometerController.isStationary.listen((isStationary) {
+      if (isStationary) {
+        setState(() {
+          _isMessageVisible = true;
+        });
+      }
+    });
   }
 
   @override
@@ -108,22 +121,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Flexible(
-                  child: Text(
-                    movie.title,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-                Flexible(
-                  child: Text(
-                    movie.imgRef,
-                    style: const TextStyle(fontSize: 14),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
+                Text(
+                  movie.title,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ],
             ),
@@ -153,7 +156,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   crossAxisCount: 3,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.6,
                 ),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
@@ -186,9 +189,48 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: screens,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _selectedIndex,
+            children: screens,
+          ),
+          Obx(() {
+            if (_accelerometerController.isStationary.value &&
+                _isMessageVisible) {
+              return Container(
+                color: Colors.black54,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Perhaps now is the right time to learn some vocabulary?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _isMessageVisible = false;
+                          });
+                        },
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          }),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,

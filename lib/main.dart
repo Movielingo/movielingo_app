@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movielingo_app/controllers/vocabulary_box_controller.dart';
 import 'package:movielingo_app/models/myuser.dart';
-import 'package:movielingo_app/screens/authenticate/authenticate.dart';
 import 'package:movielingo_app/screens/endpoints.dart';
 import 'package:movielingo_app/screens/home.dart';
 import 'package:movielingo_app/screens/vocabulary_box.dart';
