@@ -13,6 +13,7 @@ import 'package:movielingo_app/services/auth_service.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
+import 'screens/redirect_page.dart';
 
 import 'firebase_options.dart';
 
@@ -22,10 +23,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // TODO: Add FirebaseAppCheck activation code here!
   await FirebaseAppCheck.instance.activate(
-    // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-    // argument for `webProvider`
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
     // your preferred provider. Choose from:
     // 1. Debug provider
@@ -98,7 +97,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           getPages: [
-            GetPage(name: '/', page: () => const Authenticate()),
+            GetPage(name: '/', page: () => const RedirectPage()),
             GetPage(name: '/information', page: () => const UserInformation()),
             GetPage(name: '/home', page: () => const Home()),
             GetPage(name: '/box', page: () => const VocabularyBox()),
