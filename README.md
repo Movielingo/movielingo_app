@@ -10,7 +10,7 @@
 - **User Profile Management**: Easy retrieval and editing of user details like name, email, first language, and target language.
 - **Vocabulary Box**: A dedicated space to store the user's movies and series vocabulary.
 - **Vocabulary Trainer**: The user can see the words, their meanings, and the context in which they were used in the movie. The user can also test their knowledge and track their progress.
-- **Security**: Robust logout functionality ensuring data privacy and security (WIP)
+- **Security**: See 
 
 ## 🛠️ Technology Stack
 
@@ -104,3 +104,19 @@ Run all Unit Tests:
 ```
 flutter test
 ```
+## 🔒 Security
+
+### Implement Security Measures
+1. Firebase Security Rules with field-level security and input validation rules
+2. Set up Authentication and Authorization with Firebase Auth
+3. Implemented stronger password practices
+4. Additional Authentication option with Google Sign-In
+5. Input Validation for SignUp and SignIn forms (with password validation, validation if the email already exists, etc.)
+6. Firebase App Check for attestation to protect my API resources from abuse by preventing unauthorized clients from accessing my backend resources
+
+### Threat model
+![image](https://github.com/user-attachments/assets/1bafcc51-01fe-4973-a97c-813739d2ae53)
+
+### Flowchart Firebase Authentication and Firestore Database
+![image](https://github.com/user-attachments/assets/4d7ce17c-2fe6-48e4-96b8-86a996c17abc)
+
