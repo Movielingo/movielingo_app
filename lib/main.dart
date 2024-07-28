@@ -13,8 +13,9 @@ import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'screens/redirect_page.dart';
-
 import 'firebase_options.dart';
+import 'controllers/app_lifecycle_controller.dart';
+import 'observers/app_lifecycle_observer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,25 +23,17 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // TODO: Add FirebaseAppCheck activation code here!
+
   await FirebaseAppCheck.instance.activate(
-    // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-    // your preferred provider. Choose from:
-    // 1. Debug provider
-    // 2. Safety Net provider
-    // 3. Play Integrity provider
     androidProvider: AndroidProvider.debug,
-    // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-    // your preferred provider. Choose from:
-    // 1. Debug provider
-    // 2. Device Check provider
-    // 3. App Attest provider
-    // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     appleProvider: AppleProvider.appAttest,
   );
 
   Get.put(FirebaseStorageService());
   Get.put(VocabularyBoxController());
+  Get.put(AppLifecycleController());
+
+  WidgetsBinding.instance.addObserver(AppLifecycleObserver());
 
   runApp(const MyApp());
 }
@@ -48,7 +41,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return StreamProvider<MyUser?>.value(

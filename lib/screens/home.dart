@@ -10,6 +10,8 @@ import 'package:movielingo_app/services/firebase_storage_service.dart';
 import 'package:movielingo_app/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:movielingo_app/controllers/accelerometer_controller.dart';
+import 'dart:ui';
+import 'package:movielingo_app/controllers/app_lifecycle_controller.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -29,6 +31,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   final AccelerometerController _accelerometerController =
       Get.put(AccelerometerController());
+  final AppLifecycleController _appLifecycleController =
+      Get.find<AppLifecycleController>();
+
   bool _isMessageVisible = true;
 
   @override
@@ -65,10 +70,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      _appLifecycleController.setBackground(false);
       _refreshData();
-    } else if (state == AppLifecycleState.paused) {
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _appLifecycleController.setBackground(true);
       _saveData();
-    } else if (state == AppLifecycleState.inactive) {
       _pauseMediaPlayback();
     } else if (state == AppLifecycleState.detached) {
       _cleanupResources();
@@ -224,6 +231,18 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       ),
                     ],
                   ),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          }),
+          Obx(() {
+            if (_appLifecycleController.isBackground.value) {
+              return BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
                 ),
               );
             } else {
