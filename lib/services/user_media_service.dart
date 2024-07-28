@@ -196,7 +196,7 @@ Future<void> updateUserMediaProgress(
   }
 }
 
-Future<List<Vocabulary>> getDueVocabularySessionForMedia(
+Future<List<UserVocabulary>> getDueVocabularySessionForMedia(
     String userId, String mediaId,
     {int sessionSize = 20}) async {
   List<UserVocabulary> vocabularies = await db

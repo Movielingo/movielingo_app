@@ -41,7 +41,7 @@ class Endpoints extends StatelessWidget {
 
   void onPushGetDueVocabularySessionForMedia() {
     String userId = _user.currentUser?.uid ?? '';
-    getDueVocabularySessionForMedia(userId, 'gNusm32GAmpaVpUWab3m');
+    getDueVocabularySessionForMedia(userId, 'Bg5WjlpynJRQ7ZT1RCo8');
   }
 
   Future<void> onPushAddMovieToUser() async {

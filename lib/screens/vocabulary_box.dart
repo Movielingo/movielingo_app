@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movielingo_app/controllers/vocabulary_box_controller.dart';
 import 'package:movielingo_app/models/movie.dart';
+import 'package:movielingo_app/models/myuser.dart';
+import 'package:movielingo_app/screens/learning.dart';
 import 'package:movielingo_app/services/firebase_storage_service.dart';
+import 'package:movielingo_app/services/user_service.dart';
 
 class VocabularyBox extends StatelessWidget {
   const VocabularyBox({super.key});
@@ -13,6 +17,14 @@ class VocabularyBox extends StatelessWidget {
         Get.find<VocabularyBoxController>();
     final FirebaseStorageService firebaseStorageService =
         Get.find<FirebaseStorageService>();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final UserService userService = UserService();
+
+    Future<void> onMovieTap(Movie movie) async {
+      String userId = auth.currentUser?.uid ?? '';
+      MyUserData? user = await userService.getUser(userId);
+      Get.to(() => Learning(movie: movie, user: user));
+    }
 
     Widget buildMovieItem(Movie movie) {
       return FutureBuilder<String?>(
@@ -23,33 +35,36 @@ class VocabularyBox extends StatelessWidget {
           } else if (snapshot.hasError || !snapshot.hasData) {
             return const Center(child: Text('Error loading image'));
           } else {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: Image.network(
-                    snapshot.data!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Flexible(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      vocabularyBoxController
-                          .deleteMovieFromVocabularyBox(movie);
-                      Get.snackbar(
-                          'Success', 'Movie deleted from your vocabulary box!');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Colors.red, // Set the background color to red
+            return GestureDetector(
+              onTap: () => onMovieTap(movie),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 3 / 4,
+                    child: Image.network(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
                     ),
-                    child: const Text('Delete'),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        vocabularyBoxController
+                            .deleteMovieFromVocabularyBox(movie);
+                        Get.snackbar('Success',
+                            'Movie deleted from your vocabulary box!');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.red, // Set the background color to red
+                      ),
+                      child: const Text('Delete'),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
         },
@@ -80,16 +95,6 @@ class VocabularyBox extends StatelessWidget {
           },
         );
       }),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {
-            // Implement navigation to the learning screen or functionality
-            Get.snackbar('Info', 'Start learning button pressed!');
-          },
-          child: const Text('Start Learning'),
-        ),
-      ),
     );
   }
 }

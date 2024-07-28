@@ -19,7 +19,7 @@ class MediaDetail extends StatelessWidget {
         Get.find<FirebaseStorageService>();
     final VocabularyBoxController vocabularyBoxController =
         Get.put(VocabularyBoxController());
-    final AppLifecycleController _appLifecycleController =
+    final AppLifecycleController appLifecycleController =
         Get.find<AppLifecycleController>();
 
     vocabularyBoxController.setUser(user);
@@ -89,7 +89,7 @@ class MediaDetail extends StatelessWidget {
             },
           ),
           Obx(() {
-            if (_appLifecycleController.isBackground.value) {
+            if (appLifecycleController.isBackground.value) {
               return BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                 child: Container(
