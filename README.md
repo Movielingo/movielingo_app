@@ -10,7 +10,7 @@
 - **User Profile Management**: Easy retrieval and editing of user details like name, email, first language, and target language.
 - **Vocabulary Box**: A dedicated space to store the user's movies and series vocabulary.
 - **Vocabulary Trainer**: The user can see the words, their meanings, and the context in which they were used in the movie. The user can also test their knowledge and track their progress.
-- **Security**: See 
+- **Security**: See [Security](#-security)
 
 ## 🛠️ Technology Stack
 
