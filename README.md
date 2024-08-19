@@ -117,6 +117,10 @@ flutter test
 ### Threat model
 ![image](https://github.com/user-attachments/assets/1bafcc51-01fe-4973-a97c-813739d2ae53)
 
+### Updated Threat model
+<img width="5136" alt="Movielingo Threat Model New" src="https://github.com/user-attachments/assets/60278e3b-a1e5-4c36-b644-f64805a00f06">
+
+
 ### Flowchart Firebase Authentication and Firestore Database
 ![image](https://github.com/user-attachments/assets/4d7ce17c-2fe6-48e4-96b8-86a996c17abc)
 
